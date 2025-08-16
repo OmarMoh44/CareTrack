@@ -48,6 +48,7 @@ public class Doctor extends User {
     @OneToMany(mappedBy = "doctor")
     private List<Appointment> appointments;
 
-    @OneToMany(mappedBy = "doctor")
-    private List<MedicalRecord> medicalRecords;
+    @ManyToMany
+    @JoinTable(name = "doctor_medical_records", joinColumns = @JoinColumn(name = "doctor_id"), inverseJoinColumns = @JoinColumn(name = "medical_record_id"))
+    private List<MedicalRecord> accessibleMedicalRecords;
 }

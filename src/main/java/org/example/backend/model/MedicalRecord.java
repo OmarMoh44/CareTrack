@@ -25,9 +25,14 @@ public class MedicalRecord {
     @Temporal(TemporalType.DATE)
     private LocalDate date;
 
+    // The doctor who created the record (optional, can be null if not needed)
     @ManyToOne
-    @JoinColumn(name = "doctor_id", nullable = false)
-    private Doctor doctor;
+    @JoinColumn(name = "doctor_id")
+    private Doctor creatorDoctor;
+
+    // Doctors who have access to this record
+    @ManyToMany(mappedBy = "accessibleMedicalRecords")
+    private List<Doctor> sharedWithDoctors;
 
     @ManyToOne
     @JoinColumn(name = "patient_id", nullable = false)

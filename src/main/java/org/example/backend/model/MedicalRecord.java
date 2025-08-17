@@ -1,40 +1,49 @@
 package org.example.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
-@ToString
+@Builder
+@ToString(exclude = {"doctor", "patient"})
 @Entity
 @Table(name = "medical_records")
 public class MedicalRecord {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @NotBlank(message = "Must be not null")
+    @Size(min = 25, max = 500, message = "Content must be between 25 and 500 characters")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
+    @NotNull(message = "Must be not null")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
     private LocalDate date;
-
-    // The doctor who created the record (optional, can be null if not needed)
-    @ManyToOne
-    @JoinColumn(name = "doctor_id")
-    private Doctor creatorDoctor;
 
     // Doctors who have access to this record
     @ManyToMany(mappedBy = "accessibleMedicalRecords")
     private List<Doctor> sharedWithDoctors;
 
-    @ManyToOne
+    // The doctor who created the record
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "doctor_id", nullable = false)
+    private Doctor doctor;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
 }

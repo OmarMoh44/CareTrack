@@ -3,11 +3,10 @@ package org.example.backend.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,43 +17,50 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("USER")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    protected Long id;
 
     @Column(nullable = false)
-    private String fullName;
+    protected String fullName;
 
     @Column(nullable = false, unique = true)
-    private String email;
+    protected String email;
 
     @Column(nullable = false)
-    private String password;
+    protected String password;
 
-    @Column(nullable = false)
-    private String phoneNumber;
+    @Column(nullable = false, length = 11, unique = true)
+    protected String phoneNumber;
 
-    // discriminator column. prevent insertion and update from java side
-    @Column(name = "role", insertable = false, updatable = false)
-    private String role;
+
+    public Role getRole() {
+        return Role.USER;
+    }
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Spring expects ROLE_ prefix by default
-        return List.of(new SimpleGrantedAuthority("ROLE_" + this.role));
+        return Collections.singleton(() -> getRole().name());
     }
 
     @Override
-    public String getUsername(){ return this.email; }
+    public String getUsername() {
+        return this.email;
+    }
 
     @Override
-    public boolean isAccountNonExpired() { return true; }
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
     @Override
-    public boolean isAccountNonLocked() { return true; }
+    public boolean isAccountNonLocked() {
+        return true;
+    }
 
     @Override
     public boolean isCredentialsNonExpired() {

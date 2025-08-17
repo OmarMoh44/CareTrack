@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Setter
 @Getter
 @ToString
+@Builder
 @Entity
 @Table(name = "appointments")
 public class Appointment {

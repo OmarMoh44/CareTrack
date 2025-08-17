@@ -3,19 +3,20 @@ package org.example.backend.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
-@ToString
 @Entity
 @Table(name = "doctors")
+@DiscriminatorValue("DOCTOR")
 public class Doctor extends User {
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String city;
+    private City city;
 
     @Column(nullable = false)
     private String street;
@@ -30,13 +31,13 @@ public class Doctor extends User {
     @Column(nullable = false)
     private Long patientNumber;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIME)
     @Column(nullable = false)
-    private LocalDate startDate;
+    private LocalTime startTime;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIME)
     @Column(nullable = false)
-    private LocalDate endDate;
+    private LocalTime endTime;
 
     @Column(nullable = false)
     private Double consultationFee;
@@ -50,4 +51,22 @@ public class Doctor extends User {
 
     @OneToMany(mappedBy = "doctor")
     private List<MedicalRecord> medicalRecords;
+
+    @Override
+    public Role getRole() {
+        return Role.DOCTOR;
+    }
+
+    @Override
+    public String toString() {
+        String var10000 = String.valueOf(this.getCity());
+        return "Doctor(city=" + var10000 + ", street=" + this.getStreet() +
+                ", doctorSpeciality=" + String.valueOf(this.getDoctorSpeciality()) +
+                ", info=" + this.getInfo() + ", patientNumber=" + this.getPatientNumber() +
+                ", startTime=" + String.valueOf(this.getStartTime()) + ", endTime=" + String.valueOf(this.getEndTime()) +
+                ", consultationFee=" + this.getConsultationFee() + ", availableDays=" +
+                String.valueOf(this.getAvailableDays()) + ", appointments=" +
+                String.valueOf(this.getAppointments()) + ", medicalRecords=" +
+                String.valueOf(this.getMedicalRecords()) + ", " + super.toString() + ")";
+    }
 }

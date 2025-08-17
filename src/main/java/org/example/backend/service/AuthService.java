@@ -1,13 +1,15 @@
 package org.example.backend.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
+import org.example.backend.dto.DoctorDTO;
 import org.example.backend.dto.UserDTO;
 import org.example.backend.exception.ErrorMessage;
 import org.example.backend.jwt.JwtService;
+import org.example.backend.model.Patient;
 import org.example.backend.model.User;
 import org.example.backend.repository.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,7 +27,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-    private final ObjectMapper objectMapper;
+    private final ModelMapper modelMapper;
 
     public String login(UserDTO.LoginRequest loginRequest) {
         // runs UserDetailsService bean to find user from DB and compares passwords
@@ -38,16 +40,19 @@ public class AuthService {
         return null;
     }
 
-    public <T extends User> Map<String, Object> register(UserDTO.RegistrationRequest registrationRequest, Class <T> targetClass) {
-        T user = objectMapper.convertValue(registrationRequest, targetClass);
+    public <T extends User> Map<String, Object> register(UserDTO.RegistrationRequest registrationRequest, Class<T> targetClass) {
+        T user = modelMapper.map(registrationRequest, targetClass);
         Optional<User> userExisted = userRepository.findByEmailOrPhoneNumber(user.getEmail(), user.getPhoneNumber());
-        if(userExisted.isPresent())
+        if (userExisted.isPresent())
             throw new EntityExistsException(ErrorMessage.USER_EXIT.getMessage());
         user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
-        User createdUser = userRepository.save(user);
+        T createdUser = userRepository.save(user);
         String jwtToken = jwtService.generateToken(user.getEmail());
         Map<String, Object> map = new HashMap<>();
-        map.put("user", createdUser);
+        if (createdUser instanceof Patient)
+            map.put("user", modelMapper.map(createdUser, UserDTO.MainView.class));
+        else
+            map.put("user", modelMapper.map(createdUser, DoctorDTO.MainView.class));
         map.put("token", jwtToken);
         return map;
     }

@@ -6,9 +6,11 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
+import org.example.backend.dto.DoctorDTO;
 import org.example.backend.exception.ErrorMessage;
 import org.example.backend.model.Doctor;
 import org.example.backend.repository.DoctorRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,9 +23,10 @@ public class DoctorService {
     private final Validator validator;
     private final ObjectMapper objectMapper;
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
 
 
-    public Doctor updateDoctor(Long id, Map<String, Object> updates) throws JsonMappingException {
+    public DoctorDTO.MainView updateDoctor(Long id, Map<String, Object> updates) throws JsonMappingException {
         Doctor doctor = doctorRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND.getMessage())
         );
@@ -34,6 +37,6 @@ public class DoctorService {
             throw new ConstraintViolationException(violations);
         }
         if (passwordUpdate) doctor.setPassword(passwordEncoder.encode(updates.get("password").toString()));
-        return doctorRepository.save(doctor);
+        return modelMapper.map(doctorRepository.save(doctor), DoctorDTO.MainView.class);
     }
 }

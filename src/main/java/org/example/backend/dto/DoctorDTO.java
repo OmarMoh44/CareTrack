@@ -1,11 +1,13 @@
 package org.example.backend.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import org.example.backend.model.City;
 import org.example.backend.model.Day;
 import org.example.backend.model.DoctorSpeciality;
+import org.example.backend.model.Role;
 import org.example.backend.validator.EnumValue;
 import org.example.backend.validator.NoDuplicates;
 
@@ -89,4 +91,15 @@ public class DoctorDTO {
         @EnumValue(enumClass = DoctorSpeciality.class, message = "Invalid doctor speciality")
         private DoctorSpeciality doctorSpeciality;
     }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    @JsonIgnoreProperties({"password"})
+    public static class MainView extends RegistrationRequest{
+        private Long id;
+        private Role role;
+    }
+
 }

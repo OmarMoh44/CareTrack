@@ -1,9 +1,11 @@
 package org.example.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.example.backend.model.Role;
 
 public class UserDTO {
     @AllArgsConstructor
@@ -44,5 +46,15 @@ public class UserDTO {
             return "UserDTO.RegistrationRequest(fullName=" + var10000 +
                     ", phoneNumber=" + this.getPhoneNumber() + ", " + super.toString() + ")";
         }
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    @JsonIgnoreProperties({"password"})
+    public static class MainView extends RegistrationRequest {
+        private Long id;
+        private Role role;
     }
 }

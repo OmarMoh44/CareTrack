@@ -83,6 +83,11 @@ public class Doctor extends User {
     @OneToMany(mappedBy = "doctor", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<Appointment> appointments;
 
+
+    @ManyToMany
+    @JoinTable(name = "doctor_medical_records", joinColumns = @JoinColumn(name = "doctor_id"), inverseJoinColumns = @JoinColumn(name = "medical_record_id"))
+    private List<MedicalRecord> accessibleMedicalRecords;
+
     @OneToMany(mappedBy = "doctor", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<MedicalRecord> medicalRecords;
 
@@ -108,4 +113,5 @@ public class Doctor extends User {
                 ", " + super.toString() +
                 ")";
     }
+
 }

@@ -33,9 +33,15 @@ public class MedicalRecord {
     @Column(nullable = false)
     private LocalDate date;
 
+    // Doctors who have access to this record
+    @ManyToMany(mappedBy = "accessibleMedicalRecords")
+    private List<Doctor> sharedWithDoctors;
+
+    // The doctor who created the record
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id", nullable = false)
     private Doctor doctor;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id", nullable = false)

@@ -1,6 +1,5 @@
 package org.example.backend.dto;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -14,7 +13,6 @@ public class UserDTO {
     @ToString
     public static class LoginRequest {
         @NotBlank(message = "Must be not null")
-        @Pattern(regexp = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$", message = "Must be in email format")
         @Pattern(
                 regexp = "^[^\\s@]+@(gmail|yahoo|hotmail|outlook)\\.(com|net|org)$",
                 message = "Must be in email format"
@@ -32,7 +30,7 @@ public class UserDTO {
     @Setter
     public static class RegistrationRequest extends LoginRequest {
         @NotBlank(message = "Must be not null")
-        @Size(min = 10, max = 50, message = "Full name must be between 10 and 50 characters")
+        @Size(min = 7, max = 50, message = "Full name must be between 7 and 50 characters")
         private String fullName;
 
         @NotBlank(message = "Must be not null")

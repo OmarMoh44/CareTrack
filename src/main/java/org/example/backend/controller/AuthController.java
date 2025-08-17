@@ -72,7 +72,7 @@ public class AuthController {
         Cookie cookie = new Cookie("token", jwtToken);
         cookie.setHttpOnly(true);
         cookie.setPath("/api"); // base of request paths the browser will send the cookie to.
-        cookie.setMaxAge(cookieExpire);
+        cookie.setMaxAge((int) (cookieExpire / 1000));
         response.addCookie(cookie);
     }
 

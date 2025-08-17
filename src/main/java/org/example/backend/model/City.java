@@ -28,4 +28,3 @@ public enum City {
     NORTH_SINAI,
     SOUTH_SINAI
 }
-

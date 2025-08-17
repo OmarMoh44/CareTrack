@@ -7,6 +7,7 @@ import org.example.backend.model.City;
 import org.example.backend.model.Day;
 import org.example.backend.model.DoctorSpeciality;
 import org.example.backend.validator.EnumValue;
+import org.example.backend.validator.NoDuplicates;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -35,7 +36,7 @@ public class DoctorDTO {
 
         @NotNull(message = "Must not be null")
         @Positive(message = "Must be positive")
-        private Long patientNumber;
+        private Integer patientNumber;
 
         @NotNull(message = "Must not be null")
         @JsonFormat(pattern = "HH:mm")
@@ -51,6 +52,7 @@ public class DoctorDTO {
 
         @NotNull(message = "Must not be null")
         @Size(max = 7, message = "No more than 7 days")
+        @NoDuplicates
         private List<
                 @NotNull(message = "Must not be null")
                 @EnumValue(enumClass = Day.class, message = "Invalid day")
@@ -69,5 +71,22 @@ public class DoctorDTO {
         }
     }
 
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    @ToString
+    public static class SearchRequest{
+        @NotNull(message = "Must be not null")
+        @EnumValue(enumClass = City.class, message = "Invalid city")
+        private City city;
 
+        @NotBlank(message = "Must be not null")
+        @Size(min = 10, message = "Street address is too short")
+        private String street;
+
+        @NotNull(message = "Must be not null")
+        @EnumValue(enumClass = DoctorSpeciality.class, message = "Invalid doctor speciality")
+        private DoctorSpeciality doctorSpeciality;
+    }
 }

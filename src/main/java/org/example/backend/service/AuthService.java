@@ -2,8 +2,6 @@ package org.example.backend.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityExistsException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.UserDTO;
 import org.example.backend.exception.ErrorMessage;
@@ -45,7 +43,7 @@ public class AuthService {
         Optional<User> userExisted = userRepository.findByEmailOrPhoneNumber(user.getEmail(), user.getPhoneNumber());
         if(userExisted.isPresent())
             throw new EntityExistsException(ErrorMessage.USER_EXIT.getMessage());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
         User createdUser = userRepository.save(user);
         String jwtToken = jwtService.generateToken(user.getEmail());
         Map<String, Object> map = new HashMap<>();

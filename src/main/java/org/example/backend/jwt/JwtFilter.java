@@ -27,6 +27,14 @@ public class JwtFilter extends OncePerRequestFilter {
     private final UserRepository userRepository;
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        // paths of requests that are permitAll in security config
+        return path.startsWith("/login") || path.startsWith("/register");
+    }
+
+
+    @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
@@ -59,6 +67,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
             if (jwtService.validateToken(token, user)) {
                 UsernamePasswordAuthenticationToken authenticationToken =
+                        // principal is an object of the authenticated user
                         new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);

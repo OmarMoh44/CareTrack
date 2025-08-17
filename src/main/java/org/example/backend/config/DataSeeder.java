@@ -22,6 +22,11 @@ public class DataSeeder {
     @Bean
     public CommandLineRunner seedDatabase() {
         return args -> {
+            if (userRepository.count() > 0) {
+                System.out.println("Database already seeded, skipping...");
+                return;
+            }
+
             Faker faker = new Faker(new Locale("en"));
 
             // Create 20 Patients
@@ -68,7 +73,7 @@ public class DataSeeder {
                 userRepository.save(doctor);
             }
 
-            System.out.println("✅ Seeded 20 patients and 20 doctors.");
+            System.out.println("Seeded 20 patients and 20 doctors.");
         };
     }
 }

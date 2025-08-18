@@ -9,6 +9,7 @@ import org.example.backend.model.Day;
 import org.example.backend.model.DoctorSpeciality;
 import org.example.backend.model.Role;
 import org.example.backend.validator.EnumValue;
+import org.example.backend.validator.FieldsComparison;
 import org.example.backend.validator.NoDuplicates;
 
 import java.time.LocalTime;
@@ -19,6 +20,7 @@ public class DoctorDTO {
     @NoArgsConstructor
     @Getter
     @Setter
+    @FieldsComparison(smallerField = "startTime", biggerField = "endTime", message = "End time must be after start time")
     public static class RegistrationRequest extends UserDTO.RegistrationRequest {
         @NotNull(message = "Must be not null")
         @EnumValue(enumClass = City.class, message = "Invalid city")

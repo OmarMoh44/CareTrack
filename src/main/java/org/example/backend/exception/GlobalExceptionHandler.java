@@ -23,9 +23,17 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleNotValidException(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
+
+        // Process field-level errors
         ex.getBindingResult().getFieldErrors().forEach(error ->
                 errors.put(error.getField(), error.getDefaultMessage())
         );
+
+        // Process class-level (global) errors
+        ex.getBindingResult().getGlobalErrors().forEach(error ->
+                errors.put(error.getObjectName(), error.getDefaultMessage())
+        );
+
         return new ErrorResponse(errors, HttpStatus.BAD_REQUEST.value());
     }
 
@@ -36,6 +44,9 @@ public class GlobalExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         ex.getConstraintViolations().forEach(violation -> {
             String fieldName = violation.getPropertyPath().toString();
+            if (fieldName.isEmpty() || fieldName.equals("null")) {
+                fieldName = "classLevelError";
+            }
             String errorMessage = violation.getMessage();
             errors.put(fieldName, errorMessage);
         });

@@ -57,15 +57,6 @@ public class User implements UserDetails {
         return Role.USER;
     }
 
-//    public Map<String, Method> getMethodMap() throws NoSuchMethodException{
-//        Map<String, Method> methodMap = new HashMap<>();
-//        methodMap.put("fullName", this.getClass().getMethod("setFullName", String.class));
-//        methodMap.put("email", this.getClass().getMethod("setEmail", String.class));
-//        methodMap.put("password", this.getClass().getMethod("setPassword", String.class));
-//        methodMap.put("phoneNumber", this.getClass().getMethod("setPhoneNumber", String.class));
-//        return methodMap;
-//    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(() -> getRole().name());

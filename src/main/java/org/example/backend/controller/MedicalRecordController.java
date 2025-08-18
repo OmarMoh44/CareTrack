@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/medical-records")
+@RequestMapping("/medical-records")
 public class MedicalRecordController {
     @Autowired
     private MedicalRecordService medicalRecordService;

@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.example.backend.validator.EnumValue;
+import org.example.backend.validator.FieldsComparison;
 import org.example.backend.validator.NoDuplicates;
 
 import java.time.LocalTime;
@@ -22,6 +23,7 @@ import java.util.*;
 @Entity
 @Table(name = "doctors")
 @DiscriminatorValue("DOCTOR")
+@FieldsComparison(smallerField = "startTime", biggerField = "endTime", message = "End time must be after start time")
 public class Doctor extends User {
     @NotNull(message = "Must be not null")
     @EnumValue(enumClass = City.class, message = "Invalid city")
@@ -113,5 +115,4 @@ public class Doctor extends User {
                 ", " + super.toString() +
                 ")";
     }
-
 }

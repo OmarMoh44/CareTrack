@@ -30,6 +30,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
         // paths of requests that are permitAll in security config
+        // these paths do not require authentication
         return path.startsWith("/login") || path.startsWith("/register");
     }
 

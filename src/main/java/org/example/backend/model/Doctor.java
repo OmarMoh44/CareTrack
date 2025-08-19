@@ -8,7 +8,6 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.example.backend.validator.EnumValue;
 import org.example.backend.validator.FieldsComparison;
 import org.example.backend.validator.NoDuplicates;
 
@@ -25,8 +24,7 @@ import java.util.*;
 @DiscriminatorValue("DOCTOR")
 @FieldsComparison(smallerField = "startTime", biggerField = "endTime", message = "End time must be after start time")
 public class Doctor extends User {
-    @NotNull(message = "Must be not null")
-    @EnumValue(enumClass = City.class, message = "Invalid city")
+    @NotNull(message = "Must not be null")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private City city;
@@ -36,8 +34,7 @@ public class Doctor extends User {
     @Column(nullable = false)
     private String street;
 
-    @NotNull(message = "Must be not null")
-    @EnumValue(enumClass = DoctorSpeciality.class, message = "Invalid doctor speciality")
+    @NotNull(message = "Must not be null")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private DoctorSpeciality doctorSpeciality;
@@ -77,10 +74,7 @@ public class Doctor extends User {
             joinColumns = @JoinColumn(name = "doctor_id")
     )
     @Column(name = "day", nullable = false)
-    private List<
-            @NotNull(message = "Must not be null")
-            @EnumValue(enumClass = Day.class, message = "Invalid day")
-                    Day> availableDays;
+    private List<@NotNull(message = "Must not be null") Day> availableDays;
 
     @OneToMany(mappedBy = "doctor", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<Appointment> appointments;

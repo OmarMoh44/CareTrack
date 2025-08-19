@@ -8,7 +8,6 @@ import org.example.backend.model.City;
 import org.example.backend.model.Day;
 import org.example.backend.model.DoctorSpeciality;
 import org.example.backend.model.Role;
-import org.example.backend.validator.EnumValue;
 import org.example.backend.validator.FieldsComparison;
 import org.example.backend.validator.NoDuplicates;
 
@@ -22,16 +21,14 @@ public class DoctorDTO {
     @Setter
     @FieldsComparison(smallerField = "startTime", biggerField = "endTime", message = "End time must be after start time")
     public static class RegistrationRequest extends UserDTO.RegistrationRequest {
-        @NotNull(message = "Must be not null")
-        @EnumValue(enumClass = City.class, message = "Invalid city")
+        @NotNull(message = "Must not be null")
         private City city;
 
         @NotBlank(message = "Must be not null")
         @Size(min = 10, message = "Street address is too short")
         private String street;
 
-        @NotNull(message = "Must be not null")
-        @EnumValue(enumClass = DoctorSpeciality.class, message = "Invalid doctor speciality")
+        @NotNull(message = "Must not be null")
         private DoctorSpeciality doctorSpeciality;
 
         @NotBlank(message = "Must be not null")
@@ -57,10 +54,7 @@ public class DoctorDTO {
         @NotNull(message = "Must not be null")
         @Size(max = 7, message = "No more than 7 days")
         @NoDuplicates
-        private List<
-                @NotNull(message = "Must not be null")
-                @EnumValue(enumClass = Day.class, message = "Invalid day")
-                        Day> availableDays;
+        private List<@NotNull(message = "Must not be null") Day> availableDays;
 
 
         @Override
@@ -81,16 +75,14 @@ public class DoctorDTO {
     @Setter
     @ToString
     public static class SearchRequest{
-        @NotNull(message = "Must be not null")
-        @EnumValue(enumClass = City.class, message = "Invalid city")
+        @NotNull(message = "Must not be null")
         private City city;
 
         @NotBlank(message = "Must be not null")
         @Size(min = 10, message = "Street address is too short")
         private String street;
 
-        @NotNull(message = "Must be not null")
-        @EnumValue(enumClass = DoctorSpeciality.class, message = "Invalid doctor speciality")
+        @NotNull(message = "Must not be null")
         private DoctorSpeciality doctorSpeciality;
     }
 

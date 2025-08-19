@@ -6,6 +6,7 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -53,7 +54,7 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(errors, HttpStatus.BAD_REQUEST.value());
     }
 
-    // Jackson deserialization errors
+    // Jackson deserialization errors using ObjectMapper
     @ExceptionHandler(InvalidFormatException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleInvalidFormatException(InvalidFormatException ex) {
@@ -63,6 +64,22 @@ public class GlobalExceptionHandler {
                 "Invalid value '%s'. Expected type: %s.",
                 value, targetType
         );
+        return new ErrorResponse(message, HttpStatus.BAD_REQUEST.value());
+    }
+
+    // JSON parsing errors in parsing request body
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        String message = "Malformed JSON request";
+        if (ex.getCause() instanceof InvalidFormatException) {
+            InvalidFormatException invalidFormatException = (InvalidFormatException) ex.getCause();
+            message = String.format(
+                    "Invalid value '%s' for type '%s'.",
+                    invalidFormatException.getValue(),
+                    invalidFormatException.getTargetType().getSimpleName()
+            );
+        }
         return new ErrorResponse(message, HttpStatus.BAD_REQUEST.value());
     }
 

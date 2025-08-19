@@ -1,6 +1,5 @@
 package org.example.backend.config;
 
-
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.exception.ErrorMessage;
@@ -24,7 +23,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity   // activate method-level security in your application for authorization (use @PreAuthorize)
+@EnableMethodSecurity // activate method-level security in your application for authorization (use
+                      // @PreAuthorize)
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
@@ -59,7 +59,15 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/login", "/register/**").permitAll()
+                        .requestMatchers(
+                                "/login",
+                                "/register/**",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
+                                "/webjars/**")
+                        .permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authProvider())

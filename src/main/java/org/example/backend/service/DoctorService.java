@@ -6,7 +6,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
-import org.example.backend.dto.DoctorDTO;
+import org.example.backend.dto.DoctorMainView;
 import org.example.backend.exception.ErrorMessage;
 import org.example.backend.model.Doctor;
 import org.example.backend.repository.DoctorRepository;
@@ -25,8 +25,14 @@ public class DoctorService {
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
 
+    public DoctorMainView getDoctor(Long id){
+        Doctor doctor = doctorRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND.getMessage())
+        );
+        return modelMapper.map(doctor, DoctorMainView.class);
+    }
 
-    public DoctorDTO.MainView updateDoctor(Long id, Map<String, Object> updates) throws JsonMappingException {
+    public DoctorMainView updateDoctor(Long id, Map<String, Object> updates) throws JsonMappingException {
         Doctor doctor = doctorRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND.getMessage())
         );
@@ -37,6 +43,6 @@ public class DoctorService {
             throw new ConstraintViolationException(violations);
         }
         if (passwordUpdate) doctor.setPassword(passwordEncoder.encode(updates.get("password").toString()));
-        return modelMapper.map(doctorRepository.save(doctor), DoctorDTO.MainView.class);
+        return modelMapper.map(doctorRepository.save(doctor), DoctorMainView.class);
     }
 }

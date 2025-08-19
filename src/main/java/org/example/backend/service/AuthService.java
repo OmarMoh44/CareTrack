@@ -2,8 +2,10 @@ package org.example.backend.service;
 
 import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
-import org.example.backend.dto.DoctorDTO;
-import org.example.backend.dto.UserDTO;
+import org.example.backend.dto.DoctorMainView;
+import org.example.backend.dto.LoginRequest;
+import org.example.backend.dto.UserMainView;
+import org.example.backend.dto.UserRegisterRequest;
 import org.example.backend.exception.ErrorMessage;
 import org.example.backend.jwt.JwtService;
 import org.example.backend.model.Patient;
@@ -29,7 +31,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final ModelMapper modelMapper;
 
-    public String login(UserDTO.LoginRequest loginRequest) {
+    public String login(LoginRequest loginRequest) {
         // runs UserDetailsService bean to find user from DB and compares passwords
         Authentication authentication = authenticationManager.authenticate
                 (new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
@@ -40,7 +42,7 @@ public class AuthService {
         return null;
     }
 
-    public <T extends User> Map<String, Object> register(UserDTO.RegistrationRequest registrationRequest, Class<T> targetClass) {
+    public <T extends User> Map<String, Object> register(UserRegisterRequest registrationRequest, Class<T> targetClass) {
         T user = modelMapper.map(registrationRequest, targetClass);
         Optional<User> userExisted = userRepository.findByEmailOrPhoneNumber(user.getEmail(), user.getPhoneNumber());
         if (userExisted.isPresent())
@@ -50,9 +52,9 @@ public class AuthService {
         String jwtToken = jwtService.generateToken(user.getEmail());
         Map<String, Object> map = new HashMap<>();
         if (createdUser instanceof Patient)
-            map.put("user", modelMapper.map(createdUser, UserDTO.MainView.class));
+            map.put("user", modelMapper.map(createdUser, UserMainView.class));
         else
-            map.put("user", modelMapper.map(createdUser, DoctorDTO.MainView.class));
+            map.put("user", modelMapper.map(createdUser, DoctorMainView.class));
         map.put("token", jwtToken);
         return map;
     }

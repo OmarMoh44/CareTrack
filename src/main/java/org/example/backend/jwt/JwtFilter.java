@@ -1,6 +1,5 @@
 package org.example.backend.jwt;
 
-
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -31,13 +30,18 @@ public class JwtFilter extends OncePerRequestFilter {
         String path = request.getServletPath();
         // paths of requests that are permitAll in security config
         // these paths do not require authentication
-        return path.startsWith("/login") || path.startsWith("/register");
+        return path.startsWith("/login")
+                || path.startsWith("/register")
+                || path.startsWith("/swagger-ui")
+                || path.equals("/swagger-ui.html")
+                || path.startsWith("/v3/api-docs")
+                || path.startsWith("/swagger-resources")
+                || path.startsWith("/webjars");
     }
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+            FilterChain filterChain) throws ServletException, IOException {
 
         String token = null;
         String email = null;
@@ -78,4 +82,3 @@ public class JwtFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
-

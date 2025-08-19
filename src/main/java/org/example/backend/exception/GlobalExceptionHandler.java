@@ -23,35 +23,27 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleNotValidException(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-
-        // Process field-level errors
-        ex.getBindingResult().getFieldErrors().forEach(error ->
-                errors.put(error.getField(), error.getDefaultMessage())
-        );
-
-        // Process class-level (global) errors
-        ex.getBindingResult().getGlobalErrors().forEach(error ->
-                errors.put(error.getObjectName(), error.getDefaultMessage())
-        );
-
-        return new ErrorResponse(errors, HttpStatus.BAD_REQUEST.value());
+        String errorMessage = ex.getBindingResult().getFieldErrors().stream() // Process field-level errors
+                .findFirst()
+                .map(error -> error.getDefaultMessage())
+                .orElseGet(() -> ex.getBindingResult().getGlobalErrors().stream() // Process class-level (global) errors
+                        .findFirst()
+                        .map(error -> error.getDefaultMessage())
+                        .orElse("Validation error occurred"));
+        // return only message of first error
+        return new ErrorResponse(errorMessage, HttpStatus.BAD_REQUEST.value());
     }
 
     // Validation errors (fired by validator.validate())
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleConstraintViolation(ConstraintViolationException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getConstraintViolations().forEach(violation -> {
-            String fieldName = violation.getPropertyPath().toString();
-            if (fieldName.isEmpty() || fieldName.equals("null")) {
-                fieldName = "classLevelError";
-            }
-            String errorMessage = violation.getMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return new ErrorResponse(errors, HttpStatus.BAD_REQUEST.value());
+        String errorMessage = ex.getConstraintViolations().stream()
+                .findFirst()
+                .map(violation -> violation.getMessage())
+                .orElse("Validation error occurred");
+        // return only message of first error
+        return new ErrorResponse(errorMessage, HttpStatus.BAD_REQUEST.value());
     }
 
     // Jackson deserialization errors when using ObjectMapper

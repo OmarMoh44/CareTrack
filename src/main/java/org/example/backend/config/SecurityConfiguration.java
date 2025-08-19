@@ -60,6 +60,8 @@ public class SecurityConfiguration {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(req -> req
                         .requestMatchers(
+                                // public endpoints. These endpoints can be accessed without authentication
+                                // we don't add context-path in request matchers
                                 "/login",
                                 "/register/**",
                                 "/swagger-ui.html",

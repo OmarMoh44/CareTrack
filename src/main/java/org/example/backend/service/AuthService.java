@@ -59,4 +59,7 @@ public class AuthService {
         return map;
     }
 
+    public void deleteAccount(User authenticatedUser) {
+        userRepository.deleteById(authenticatedUser.getId());
+    }
 }

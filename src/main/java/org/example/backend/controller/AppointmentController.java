@@ -36,12 +36,12 @@ public class AppointmentController {
         return appointmentService.bookAppointment(request, authenticatedUser);
     }
 
-    @PatchMapping("/{appointmentId}")
+    @PatchMapping
     @PreAuthorize("hasAnyAuthority('PATIENT', 'DOCTOR')")
-    public AppointmentResponse updateAppointment(@RequestBody @Valid ModifyAppointmentRequest request,
+    public AppointmentResponse modifyAppointment(@RequestBody @Valid ModifyAppointmentRequest request,
                                                  Authentication authentication) {
         User authenticatedUser = (User) authentication.getPrincipal();
-        return appointmentService.updateAppointment(request, authenticatedUser);
+        return appointmentService.modifyAppointment(request, authenticatedUser);
     }
 
 

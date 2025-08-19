@@ -14,13 +14,12 @@ import org.example.backend.dto.*;
 import org.example.backend.exception.ErrorMessage;
 import org.example.backend.model.Doctor;
 import org.example.backend.model.Patient;
+import org.example.backend.model.User;
 import org.example.backend.service.AuthService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -106,22 +105,35 @@ public class AuthController {
 
     @GetMapping("/logout")
     @PreAuthorize("hasAnyAuthority('PATIENT', 'DOCTOR')")
-    public String logout(HttpServletResponse response, HttpServletRequest request) {
-        Cookie cookie = new Cookie("token", null);
-        // To clear token cookie, we must set the cookie with the same settings as when it was created except setMaxAge
-        cookie.setHttpOnly(true);
-        cookie.setPath("/api");
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
+    public String logout(HttpServletResponse response) {
+        clearCookie(response);
         return "Logged out successfully";
+    }
+
+    @DeleteMapping("/delete-account")
+    @PreAuthorize("hasAnyAuthority('PATIENT', 'DOCTOR')")
+    public String deleteAccount(Authentication authentication, HttpServletResponse response) {
+        User authenticatedUser = (User) authentication.getPrincipal();
+        authService.deleteAccount(authenticatedUser);
+        clearCookie(response);
+        return "Account deleted successfully";
     }
 
     private void addCookie(HttpServletResponse response, String jwtToken) {
         Cookie cookie = new Cookie("token", jwtToken);
         cookie.setHttpOnly(true);
-        cookie.setPath("/api"); // base of request paths the browser will send the cookie to.
+        cookie.setPath("/api"); // base of request paths (context-path) the browser will send the cookie to.
         cookie.setMaxAge((int) (cookieExpire / 1000));
         response.addCookie(cookie);
+    }
+
+    private void clearCookie(HttpServletResponse response){
+        Cookie cookie = new Cookie("token", null);
+        // To clear token cookie, we must set the cookie with the same settings as when it was created except setMaxAge
+        cookie.setHttpOnly(true);
+        cookie.setPath("/api");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie); // override the existing valid cookie
     }
 
 }

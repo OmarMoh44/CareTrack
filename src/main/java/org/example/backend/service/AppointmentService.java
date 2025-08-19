@@ -60,7 +60,7 @@ public class AppointmentService {
     }
 
     @Transactional
-    public AppointmentResponse updateAppointment(ModifyAppointmentRequest request, User authenticatedUser) {
+    public AppointmentResponse modifyAppointment(ModifyAppointmentRequest request, User authenticatedUser) {
         Appointment appointment = appointmentRepository.findById(request.getId())
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.APPOINTMENT_NOT_FOUND.getMessage()));
         verifyAppointmentOwnership(appointment, authenticatedUser);
@@ -114,7 +114,12 @@ public class AppointmentService {
                 .patientName(patient.getFullName())
                 .doctorId(doctor.getId())
                 .doctorName(doctor.getFullName())
+                .doctorCity(doctor.getCity().name())
+                .doctorStreet(doctor.getStreet())
                 .doctorSpecialization(doctor.getDoctorSpeciality().name())
+                .doctorStartTime(doctor.getStartTime())
+                .doctorEndTime(doctor.getEndTime())
+                .doctorConsultationFee(doctor.getConsultationFee())
                 .build();
     }
 

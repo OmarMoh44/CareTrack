@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,5 +26,10 @@ public class AppointmentResponse {
     
     private Long doctorId;
     private String doctorName;
+    private String doctorCity;
+    private String doctorStreet;
     private String doctorSpecialization;
+    private LocalTime doctorStartTime;
+    private LocalTime doctorEndTime;
+    private Double doctorConsultationFee;
 }

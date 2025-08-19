@@ -6,7 +6,10 @@ import lombok.Getter;
 public enum ErrorMessage {
     JWT_ERROR("Unauthorized access. Login again."),
     USER_NOT_FOUND("User not found."),
-    USER_EXIT("User is already exist");
+    USER_EXIT("User is already exist"),
+    DOCTOR_NOT_AVAILABLE("Doctor is not available on this day."),
+    APPOINTMENT_EXISTS("Appointment already exists for this doctor on this date."),
+    APPOINTMENT_NOT_FOUND("Appointment not found.");
 
 
     private String message;

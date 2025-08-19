@@ -26,8 +26,6 @@ public class DoctorController {
         return doctorService.getDoctor(authenticatedUser.getId());
     }
 
-    @PatchMapping
-    @PreAuthorize("hasAuthority('DOCTOR')")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Dynamic map containing doctor fields to update",
             content = @Content(
@@ -38,6 +36,8 @@ public class DoctorController {
                     )
             )
     )
+    @PatchMapping
+    @PreAuthorize("hasAuthority('DOCTOR')")
     public DoctorMainView updateDoctor(
             @RequestBody Map<String, Object> updates,
             Authentication authentication) throws JsonMappingException {

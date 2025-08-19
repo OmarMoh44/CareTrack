@@ -19,7 +19,7 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    // Validation errors (DTO @Valid)
+    // Validation errors (fired by @Valid)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleNotValidException(MethodArgumentNotValidException ex) {
@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(errors, HttpStatus.BAD_REQUEST.value());
     }
 
-    // Validation errors (validator.validate())
+    // Validation errors (fired by validator.validate())
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleConstraintViolation(ConstraintViolationException ex) {
@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(errors, HttpStatus.BAD_REQUEST.value());
     }
 
-    // Jackson deserialization errors using ObjectMapper
+    // Jackson deserialization errors when using ObjectMapper
     @ExceptionHandler(InvalidFormatException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleInvalidFormatException(InvalidFormatException ex) {
@@ -67,7 +67,7 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(message, HttpStatus.BAD_REQUEST.value());
     }
 
-    // JSON parsing errors in parsing request body
+    // JSON parsing errors when parsing request body
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
@@ -81,6 +81,12 @@ public class GlobalExceptionHandler {
             );
         }
         return new ErrorResponse(message, HttpStatus.BAD_REQUEST.value());
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleIllegalArgumentException(IllegalArgumentException ex){
+        return new ErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
 
     // JPA entity already exists

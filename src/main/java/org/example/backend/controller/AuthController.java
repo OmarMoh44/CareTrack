@@ -16,6 +16,7 @@ import org.example.backend.model.Doctor;
 import org.example.backend.model.Patient;
 import org.example.backend.service.AuthService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -104,6 +105,7 @@ public class AuthController {
     }
 
     @GetMapping("/logout")
+    @PreAuthorize("hasAnyAuthority('PATIENT', 'DOCTOR')")
     public String logout(HttpServletResponse response, HttpServletRequest request) {
         Cookie cookie = new Cookie("token", null);
         // To clear token cookie, we must set the cookie with the same settings as when it was created except setMaxAge

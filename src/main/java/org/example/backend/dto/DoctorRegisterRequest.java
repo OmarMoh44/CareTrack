@@ -28,7 +28,7 @@ public class DoctorRegisterRequest extends UserRegisterRequest {
     private City city;
 
     @NotBlank(message = "Must be not null")
-    @Size(min = 10, message = "Street address is too short")
+    @Size(min = 5, message = "Street address is too short")
     private String street;
 
     @NotNull(message = "Must not be null")

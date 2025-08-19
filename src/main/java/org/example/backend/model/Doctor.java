@@ -1,6 +1,8 @@
 package org.example.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,6 +25,7 @@ import java.util.*;
 @Table(name = "doctors")
 @DiscriminatorValue("DOCTOR")
 @FieldsComparison(smallerField = "startTime", biggerField = "endTime", message = "End time must be after start time")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Doctor extends User {
     @NotNull(message = "Must not be null")
     @Enumerated(EnumType.STRING)
@@ -30,7 +33,7 @@ public class Doctor extends User {
     private City city;
 
     @NotBlank(message = "Must be not null")
-    @Size(min = 10, message = "Street address is too short")
+    @Size(min = 5, message = "Street address is too short")
     @Column(nullable = false)
     private String street;
 

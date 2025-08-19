@@ -1,6 +1,8 @@
 package org.example.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -14,7 +16,9 @@ import java.time.LocalDate;
 @Builder
 @ToString(exclude = {"patient", "doctor"})
 @Entity
-@Table(name = "appointments")
+@Table(name = "appointments",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"date", "patient_id", "doctor_id"})})
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Appointment {
 
     @Id

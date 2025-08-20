@@ -23,15 +23,17 @@ public class AppointmentController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('PATIENT', 'DOCTOR')")
-    public List<AppointmentResponse> getAppointments(Authentication authentication) {
+    public List<AppointmentResponse> getAppointments(Authentication authentication,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         User authenticatedUser = (User) authentication.getPrincipal();
-        return appointmentService.getAppointments(authenticatedUser);
+        return appointmentService.getAppointments(authenticatedUser, page, size);
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('PATIENT')")
     public AppointmentResponse bookAppointment(@RequestBody @Valid BookAppointmentRequest request,
-                                               Authentication authentication) {
+            Authentication authentication) {
         Patient authenticatedUser = (Patient) authentication.getPrincipal();
         return appointmentService.bookAppointment(request, authenticatedUser);
     }
@@ -39,16 +41,15 @@ public class AppointmentController {
     @PatchMapping
     @PreAuthorize("hasAnyAuthority('PATIENT', 'DOCTOR')")
     public AppointmentResponse modifyAppointment(@RequestBody @Valid ModifyAppointmentRequest request,
-                                                 Authentication authentication) {
+            Authentication authentication) {
         User authenticatedUser = (User) authentication.getPrincipal();
         return appointmentService.modifyAppointment(request, authenticatedUser);
     }
 
-
     @DeleteMapping("/{appointmentId}")
     @PreAuthorize("hasAnyAuthority('PATIENT', 'DOCTOR')")
     public String cancelAppointment(@PathVariable Long appointmentId,
-                                    Authentication authentication) {
+            Authentication authentication) {
         User authenticatedUser = (User) authentication.getPrincipal();
         return appointmentService.cancelAppointment(appointmentId, authenticatedUser);
     }

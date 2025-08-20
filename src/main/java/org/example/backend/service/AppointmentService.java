@@ -8,6 +8,8 @@ import org.example.backend.exception.ErrorMessage;
 import org.example.backend.model.*;
 import org.example.backend.repository.AppointmentRepository;
 import org.example.backend.repository.DoctorRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,15 +25,17 @@ public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final DoctorRepository doctorRepository;
 
-    public List<AppointmentResponse> getAppointments(User authenticatedUser) {
+    public List<AppointmentResponse> getAppointments(User authenticatedUser, int page, int size) {
         List<Appointment> appointments = new ArrayList<>();
+        Pageable pageable = PageRequest.of(page, size);
         if (authenticatedUser.getRole() == Role.PATIENT) {
             Patient patient = (Patient) authenticatedUser;
             appointments = appointmentRepository.findByPatientIdAndDateGreaterThanEqual(patient.getId(),
-                    LocalDate.now());
+                    LocalDate.now(), pageable).getContent();
         } else if (authenticatedUser.getRole() == Role.DOCTOR) {
             Doctor doctor = (Doctor) authenticatedUser;
-            appointments = appointmentRepository.findByDoctorIdAndDateGreaterThanEqual(doctor.getId(), LocalDate.now());
+            appointments = appointmentRepository.findByDoctorIdAndDateGreaterThanEqual(doctor.getId(), LocalDate.now(),
+                    pageable).getContent();
         }
         return appointments.stream()
                 .map(appointment -> buildAppointmentResponse(appointment, appointment.getDoctor(),

@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {
-    Page<Doctor> findByCityAndDoctorSpecialityAndStreetContainingIgnoreCase
-            (City city, DoctorSpeciality doctorSpeciality, String street, Pageable pageable);
+    Page<Doctor> findByCityAndDoctorSpeciality
+            (City city, DoctorSpeciality doctorSpeciality, Pageable pageable);
 }

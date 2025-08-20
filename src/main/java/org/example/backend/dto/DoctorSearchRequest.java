@@ -17,10 +17,6 @@ public class DoctorSearchRequest{
     @NotNull(message = "Must not be null")
     private City city;
 
-    @NotBlank(message = "Must be not null")
-    @Size(min = 5, message = "Street address is too short")
-    private String street;
-
     @NotNull(message = "Must not be null")
     private DoctorSpeciality doctorSpeciality;
 }

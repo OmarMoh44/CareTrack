@@ -56,10 +56,9 @@ public class PatientService {
 
     public List<DoctorMainView> doctorsSearch(DoctorSearchRequest searchRequest, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return doctorRepository.findByCityAndDoctorSpecialityAndStreetContainingIgnoreCase(
+        return doctorRepository.findByCityAndDoctorSpeciality(
                 searchRequest.getCity(),
                 searchRequest.getDoctorSpeciality(),
-                searchRequest.getStreet(),
                 pageable
         ).getContent().stream().map(doctor -> modelMapper.map(doctor, DoctorMainView.class))
                 .collect(Collectors.toList());

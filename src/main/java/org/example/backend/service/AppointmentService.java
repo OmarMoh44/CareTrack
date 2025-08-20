@@ -14,10 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -29,27 +27,29 @@ public class AppointmentService {
         List<Appointment> appointments = new ArrayList<>();
         if (authenticatedUser.getRole() == Role.PATIENT) {
             Patient patient = (Patient) authenticatedUser;
-            appointments = appointmentRepository.findByPatientIdAndDateGreaterThanEqual(patient.getId(), LocalDate.now());
+            appointments = appointmentRepository.findByPatientIdAndDateGreaterThanEqual(patient.getId(),
+                    LocalDate.now());
         } else if (authenticatedUser.getRole() == Role.DOCTOR) {
             Doctor doctor = (Doctor) authenticatedUser;
             appointments = appointmentRepository.findByDoctorIdAndDateGreaterThanEqual(doctor.getId(), LocalDate.now());
         }
         return appointments.stream()
-                .map(appointment -> buildAppointmentResponse
-                        (appointment, appointment.getDoctor(), appointment.getPatient()))
+                .map(appointment -> buildAppointmentResponse(appointment, appointment.getDoctor(),
+                        appointment.getPatient()))
                 .toList();
     }
-
 
     @Transactional
     public AppointmentResponse bookAppointment(BookAppointmentRequest request, Patient patient) {
         Doctor doctor = doctorRepository.findById(request.getDoctorId())
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND.getMessage()));
-        verifyDoctorAvailable(doctor, request.getDate());
-        if (appointmentRepository.findByDoctorIdAndPatientIdAndDate(request.getDoctorId(), patient.getId(), request.getDate())
+        verifyAppointmentNotPast(request.getDate());
+        if (appointmentRepository
+                .findByDoctorIdAndPatientIdAndDate(request.getDoctorId(), patient.getId(), request.getDate())
                 .isPresent()) {
             throw new EntityNotFoundException(ErrorMessage.APPOINTMENT_EXISTS.getMessage());
         }
+        verifyDoctorAvailable(doctor, request.getDate());
         verifyEnoughPatientNumber(request.getDoctorId(), request.getDate(), doctor.getPatientNumber());
         Appointment appointment = new Appointment();
         appointment.setDoctor(doctor);
@@ -64,11 +64,29 @@ public class AppointmentService {
         Appointment appointment = appointmentRepository.findById(request.getId())
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.APPOINTMENT_NOT_FOUND.getMessage()));
         verifyAppointmentOwnership(appointment, authenticatedUser);
-        verifyDoctorAvailable(appointment.getDoctor(), request.getDate());
-        verifyEnoughPatientNumber(appointment.getDoctor().getId(), request.getDate(), appointment.getDoctor().getPatientNumber());
+        verifyAppointmentNotPast(appointment.getDate());
+        verifyAppointmentNotPast(request.getDate());
+
+        // If date is not changing, skip duplicate check
+        if (!appointment.getDate().equals(request.getDate())) {
+            // Check if there's already another appointment for the same patient and doctor
+            // on the new date
+            appointmentRepository.findByDoctorIdAndPatientIdAndDate(
+                    appointment.getDoctor().getId(),
+                    appointment.getPatient().getId(),
+                    request.getDate())
+                    .ifPresent(existingAppointment -> {
+                        throw new EntityNotFoundException(ErrorMessage.APPOINTMENT_EXISTS.getMessage());
+                    });
+
+            verifyDoctorAvailable(appointment.getDoctor(), request.getDate());
+            verifyEnoughPatientNumber(appointment.getDoctor().getId(), request.getDate(),
+                    appointment.getDoctor().getPatientNumber());
+        }
+
         appointment.setDate(request.getDate());
-        appointment = appointmentRepository.save(appointment);
-        return buildAppointmentResponse(appointment, appointment.getDoctor(), appointment.getPatient());
+        Appointment savedAppointment = appointmentRepository.save(appointment);
+        return buildAppointmentResponse(savedAppointment, savedAppointment.getDoctor(), savedAppointment.getPatient());
     }
 
     @Transactional
@@ -76,6 +94,7 @@ public class AppointmentService {
         Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.APPOINTMENT_NOT_FOUND.getMessage()));
         verifyAppointmentOwnership(appointment, authenticatedUser);
+        verifyAppointmentNotPast(appointment.getDate());
         appointmentRepository.delete(appointment);
         return "Appointment with ID " + appointmentId + " has been cancelled successfully.";
     }
@@ -93,7 +112,7 @@ public class AppointmentService {
     }
 
     private void verifyDoctorAvailable(Doctor doctor, LocalDate date) {
-        Day day = Day.valueOf(date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase());
+        Day day = Day.valueOf(date.getDayOfWeek().name());
         if (!doctor.getAvailableDays().contains(day)) {
             throw new EntityNotFoundException(ErrorMessage.DOCTOR_NOT_AVAILABLE.getMessage());
         }
@@ -102,7 +121,13 @@ public class AppointmentService {
     private void verifyEnoughPatientNumber(Long doctorId, LocalDate date, Integer patientNumber) {
         Integer count = appointmentRepository.countByDoctorIdAndDate(doctorId, date);
         if (count + 1 > patientNumber) {
-            throw new EntityNotFoundException(ErrorMessage.DOCTOR_NOT_AVAILABLE.getMessage());
+            throw new EntityNotFoundException(ErrorMessage.DOCTOR_CAPACITY_FULL.getMessage());
+        }
+    }
+
+    private void verifyAppointmentNotPast(LocalDate date) {
+        if (date.isBefore(LocalDate.now())) {
+            throw new EntityNotFoundException(ErrorMessage.APPOINTMENT_PAST.getMessage());
         }
     }
 
@@ -122,6 +147,5 @@ public class AppointmentService {
                 .doctorConsultationFee(doctor.getConsultationFee())
                 .build();
     }
-
 
 }

@@ -20,10 +20,20 @@ public class MedicalRecordController {
 
     @GetMapping("/patient/me")
     @PreAuthorize("hasRole('PATIENT')")
-    public List<MedicalRecord> getRecordsByPatient(@AuthenticationPrincipal User user) {
+    public List<org.example.backend.dto.MedicalRecordResponse> getRecordsByPatient(@AuthenticationPrincipal User user) {
         // user is guaranteed to be a Patient due to role
         Patient patient = (Patient) user;
-        return medicalRecordService.getRecordsByPatient(patient);
+        return medicalRecordService.getRecordsByPatient(patient).stream()
+                .map(record -> org.example.backend.dto.MedicalRecordResponse.builder()
+                        .id(record.getId())
+                        .content(record.getContent())
+                        .date(record.getDate())
+                        .doctorId(record.getDoctor() != null ? record.getDoctor().getId() : null)
+                        .doctorName(record.getDoctor() != null ? record.getDoctor().getFullName() : null)
+                        .patientId(record.getPatient() != null ? record.getPatient().getId() : null)
+                        .patientName(record.getPatient() != null ? record.getPatient().getFullName() : null)
+                        .build())
+                .toList();
     }
 
     @GetMapping("/{recordId}")
@@ -39,24 +49,40 @@ public class MedicalRecordController {
         return medicalRecordService.saveRecord(updatedRecord);
     }
 
+    @Autowired
+    private org.example.backend.repository.MedicalRecordRepository medicalRecordRepository;
+    @Autowired
+    private org.example.backend.repository.DoctorRepository doctorRepository;
+
     @PostMapping("/share")
     @PreAuthorize("hasRole('PATIENT')")
     public void shareRecordWithDoctor(@RequestParam Long recordId, @RequestParam Long doctorId,
             @AuthenticationPrincipal User user) {
         // user is guaranteed to be a Patient due to role
-        MedicalRecord record = new MedicalRecord();
-        record.setId(recordId);
-        Doctor doctor = new Doctor();
-        doctor.setId(doctorId);
+        MedicalRecord record = medicalRecordRepository.findById(recordId)
+                .orElseThrow(() -> new RuntimeException("MedicalRecord not found"));
+        Doctor doctor = doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new RuntimeException("Doctor not found"));
         medicalRecordService.shareRecordWithDoctor(record, doctor);
     }
 
     @GetMapping("/shared/doctor/me")
     @PreAuthorize("hasRole('DOCTOR')")
-    public List<MedicalRecord> getSharedRecordsForDoctor(@AuthenticationPrincipal User user) {
+    public List<org.example.backend.dto.MedicalRecordResponse> getSharedRecordsForDoctor(
+            @AuthenticationPrincipal User user) {
         // user is guaranteed to be a Doctor due to role
         Doctor doctor = (Doctor) user;
-        return medicalRecordService.getSharedRecordsForDoctor(doctor);
+        return medicalRecordService.getSharedRecordsForDoctor(doctor).stream()
+                .map(record -> org.example.backend.dto.MedicalRecordResponse.builder()
+                        .id(record.getId())
+                        .content(record.getContent())
+                        .date(record.getDate())
+                        .doctorId(record.getDoctor() != null ? record.getDoctor().getId() : null)
+                        .doctorName(record.getDoctor() != null ? record.getDoctor().getFullName() : null)
+                        .patientId(record.getPatient() != null ? record.getPatient().getId() : null)
+                        .patientName(record.getPatient() != null ? record.getPatient().getFullName() : null)
+                        .build())
+                .toList();
     }
 
     @GetMapping("/shared/patient/me")

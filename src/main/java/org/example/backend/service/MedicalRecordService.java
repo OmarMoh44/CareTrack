@@ -27,16 +27,42 @@ public class MedicalRecordService {
     }
 
     public void shareRecordWithDoctor(MedicalRecord record, Doctor doctor) {
+
         List<Doctor> doctors = record.getSharedWithDoctors();
+        if (doctors == null) {
+            doctors = new java.util.ArrayList<>();
+        }
         if (!doctors.contains(doctor)) {
             doctors.add(doctor);
             record.setSharedWithDoctors(doctors);
-            medicalRecordRepository.save(record);
+        }
+
+        List<MedicalRecord> records = doctor.getAccessibleMedicalRecords();
+        if (records == null) {
+            records = new java.util.ArrayList<>();
+        }
+        if (!records.contains(record)) {
+            records.add(record);
+            doctor.setAccessibleMedicalRecords(records);
+        }
+
+        medicalRecordRepository.save(record);
+
+        org.example.backend.repository.DoctorRepository doctorRepository = null;
+        try {
+            java.lang.reflect.Field repoField = this.getClass().getDeclaredField("doctorRepository");
+            repoField.setAccessible(true);
+            doctorRepository = (org.example.backend.repository.DoctorRepository) repoField.get(this);
+        } catch (Exception e) {
+
+        }
+        if (doctorRepository != null) {
+            doctorRepository.save(doctor);
         }
     }
 
     public List<MedicalRecord> getSharedRecordsForDoctor(Doctor doctor) {
-        return doctor.getAccessibleMedicalRecords();
+        return medicalRecordRepository.findMedicalRecordsSharedWithDoctor(doctor.getId());
     }
 
     public List<MedicalRecord> getSharedRecordsForPatient(Patient patient) {

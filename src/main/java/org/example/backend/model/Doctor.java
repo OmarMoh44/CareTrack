@@ -27,6 +27,21 @@ import java.util.*;
 @FieldsComparison(smallerField = "startTime", biggerField = "endTime", message = "End time must be after start time")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Doctor extends User {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Doctor doctor = (Doctor) o;
+        return Objects.equals(getId(), doctor.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
+
     @NotNull(message = "Must not be null")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -72,22 +87,18 @@ public class Doctor extends User {
     @NoDuplicates
     @ElementCollection(targetClass = Day.class)
     @Enumerated(EnumType.STRING)
-    @CollectionTable(
-            name = "doctor_available_days",
-            joinColumns = @JoinColumn(name = "doctor_id")
-    )
+    @CollectionTable(name = "doctor_available_days", joinColumns = @JoinColumn(name = "doctor_id"))
     @Column(name = "day", nullable = false)
     private List<@NotNull(message = "Must not be null") Day> availableDays;
 
-    @OneToMany(mappedBy = "doctor", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "doctor", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
     private List<Appointment> appointments;
-
 
     @ManyToMany
     @JoinTable(name = "doctor_medical_records", joinColumns = @JoinColumn(name = "doctor_id"), inverseJoinColumns = @JoinColumn(name = "medical_record_id"))
     private List<MedicalRecord> accessibleMedicalRecords;
 
-    @OneToMany(mappedBy = "doctor", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "doctor", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
     private List<MedicalRecord> medicalRecords;
 
     @Override

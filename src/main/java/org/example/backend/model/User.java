@@ -16,7 +16,7 @@ import java.util.*;
 @NoArgsConstructor
 @Setter
 @Getter
-@ToString(exclude = {"password"})
+@ToString(exclude = { "password" })
 @SuperBuilder
 @Entity
 @Table(name = "users")
@@ -34,10 +34,7 @@ public class User implements UserDetails {
     protected String fullName;
 
     @NotBlank(message = "Must be not null")
-    @Pattern(
-            regexp = "^[^\\s@]+@(gmail|yahoo|hotmail|outlook)\\.(com|net|org)$",
-            message = "Must be in email format"
-    )
+    @Pattern(regexp = "^[^\\s@]+@(gmail|yahoo|hotmail|outlook)\\.(com|net|org)$", message = "Must be in email format")
     @Column(nullable = false, unique = true)
     protected String email;
 
@@ -59,7 +56,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(() -> getRole().name());
+        return Collections.singleton(() -> "ROLE_" + getRole().name());
     }
 
     @Override
@@ -68,14 +65,22 @@ public class User implements UserDetails {
     }
 
     @Override
-    public boolean isAccountNonExpired() { return true; }
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
     @Override
-    public boolean isAccountNonLocked() { return true; }
+    public boolean isAccountNonLocked() {
+        return true;
+    }
 
     @Override
-    public boolean isCredentialsNonExpired() { return true; }
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
 
     @Override
-    public boolean isEnabled() { return true; }
+    public boolean isEnabled() {
+        return true;
+    }
 }

@@ -8,7 +8,6 @@ import org.example.backend.model.City;
 import org.example.backend.model.Day;
 import org.example.backend.model.DoctorSpeciality;
 import org.example.backend.model.Role;
-import org.example.backend.validator.EnumValue;
 import org.example.backend.validator.NoDuplicates;
 
 import java.time.LocalTime;
@@ -21,7 +20,6 @@ public class DoctorDTO {
     @Setter
     public static class RegistrationRequest extends UserDTO.RegistrationRequest {
         @NotNull(message = "Must be not null")
-        @EnumValue(enumClass = City.class, message = "Invalid city")
         private City city;
 
         @NotBlank(message = "Must be not null")
@@ -29,7 +27,6 @@ public class DoctorDTO {
         private String street;
 
         @NotNull(message = "Must be not null")
-        @EnumValue(enumClass = DoctorSpeciality.class, message = "Invalid doctor speciality")
         private DoctorSpeciality doctorSpeciality;
 
         @NotBlank(message = "Must be not null")
@@ -55,11 +52,7 @@ public class DoctorDTO {
         @NotNull(message = "Must not be null")
         @Size(max = 7, message = "No more than 7 days")
         @NoDuplicates
-        private List<
-                @NotNull(message = "Must not be null")
-                @EnumValue(enumClass = Day.class, message = "Invalid day")
-                        Day> availableDays;
-
+        private List<@NotNull(message = "Must not be null") Day> availableDays;
 
         @Override
         public String toString() {
@@ -67,8 +60,10 @@ public class DoctorDTO {
             return "DoctorDTO.RegistrationRequest(city=" + var10000 + ", street=" + this.getStreet() +
                     ", doctorSpeciality=" + String.valueOf(this.getDoctorSpeciality()) +
                     ", info=" + this.getInfo() + ", patientNumber=" + this.getPatientNumber() +
-                    ", startTime=" + String.valueOf(this.getStartTime()) + ", endTime=" + String.valueOf(this.getEndTime()) +
-                    ", consultationFee=" + this.getConsultationFee() + ", availableDays=" + String.valueOf(this.getAvailableDays()) +
+                    ", startTime=" + String.valueOf(this.getStartTime()) + ", endTime="
+                    + String.valueOf(this.getEndTime()) +
+                    ", consultationFee=" + this.getConsultationFee() + ", availableDays="
+                    + String.valueOf(this.getAvailableDays()) +
                     ", " + super.toString() + ")";
         }
     }
@@ -78,9 +73,8 @@ public class DoctorDTO {
     @Getter
     @Setter
     @ToString
-    public static class SearchRequest{
+    public static class SearchRequest {
         @NotNull(message = "Must be not null")
-        @EnumValue(enumClass = City.class, message = "Invalid city")
         private City city;
 
         @NotBlank(message = "Must be not null")
@@ -88,7 +82,6 @@ public class DoctorDTO {
         private String street;
 
         @NotNull(message = "Must be not null")
-        @EnumValue(enumClass = DoctorSpeciality.class, message = "Invalid doctor speciality")
         private DoctorSpeciality doctorSpeciality;
     }
 
@@ -96,8 +89,8 @@ public class DoctorDTO {
     @NoArgsConstructor
     @Getter
     @Setter
-    @JsonIgnoreProperties({"password"})
-    public static class MainView extends RegistrationRequest{
+    @JsonIgnoreProperties({ "password" })
+    public static class MainView extends RegistrationRequest {
         private Long id;
         private Role role;
     }

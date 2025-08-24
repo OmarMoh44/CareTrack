@@ -16,7 +16,7 @@ import java.util.*;
 @NoArgsConstructor
 @Setter
 @Getter
-@ToString(exclude = { "password" })
+@ToString(exclude = {"password"})
 @SuperBuilder
 @Entity
 @Table(name = "users")
@@ -56,7 +56,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(() -> "ROLE_" + getRole().name());
+        return Collections.singleton(() -> getRole().name());
     }
 
     @Override

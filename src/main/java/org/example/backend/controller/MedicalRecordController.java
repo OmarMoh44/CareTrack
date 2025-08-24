@@ -19,7 +19,7 @@ public class MedicalRecordController {
     private MedicalRecordService medicalRecordService;
 
     @GetMapping("/patient/me")
-    @PreAuthorize("hasRole('PATIENT')")
+    @PreAuthorize("hasAuthority('PATIENT')")
     public List<org.example.backend.dto.MedicalRecordResponse> getRecordsByPatient(@AuthenticationPrincipal User user) {
         // user is guaranteed to be a Patient due to role
         Patient patient = (Patient) user;
@@ -42,7 +42,7 @@ public class MedicalRecordController {
     }
 
     @PutMapping("/{recordId}")
-    @PreAuthorize("hasRole('DOCTOR')")
+    @PreAuthorize("hasAuthority('DOCTOR')")
     public MedicalRecord updateMedicalRecord(@PathVariable Long recordId, @RequestBody MedicalRecord updatedRecord,
             @AuthenticationPrincipal User user) {
         updatedRecord.setId(recordId);
@@ -55,7 +55,7 @@ public class MedicalRecordController {
     private org.example.backend.repository.DoctorRepository doctorRepository;
 
     @PostMapping("/share")
-    @PreAuthorize("hasRole('PATIENT')")
+    @PreAuthorize("hasAuthority('PATIENT')")
     public void shareRecordWithDoctor(@RequestParam Long recordId, @RequestParam Long doctorId,
             @AuthenticationPrincipal User user) {
         // user is guaranteed to be a Patient due to role
@@ -67,7 +67,7 @@ public class MedicalRecordController {
     }
 
     @GetMapping("/shared/doctor/me")
-    @PreAuthorize("hasRole('DOCTOR')")
+    @PreAuthorize("hasAuthority('DOCTOR')")
     public List<org.example.backend.dto.MedicalRecordResponse> getSharedRecordsForDoctor(
             @AuthenticationPrincipal User user) {
         // user is guaranteed to be a Doctor due to role
@@ -86,7 +86,7 @@ public class MedicalRecordController {
     }
 
     @GetMapping("/shared/patient/me")
-    @PreAuthorize("hasRole('PATIENT')")
+    @PreAuthorize("hasAuthority('PATIENT')")
     public List<MedicalRecord> getSharedRecordsForPatient(@AuthenticationPrincipal User user) {
         // user is guaranteed to be a Patient due to role
         Patient patient = (Patient) user;

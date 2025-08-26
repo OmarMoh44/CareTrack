@@ -74,4 +74,19 @@ public class MedicalRecordService {
     public void updateMedicalRecord(MedicalRecord record) {
         medicalRecordRepository.save(record);
     }
+
+    public void shareAllRecordsWithDoctor(Patient patient, Doctor doctor) {
+        List<MedicalRecord> records = medicalRecordRepository.findByPatient(patient);
+        for (MedicalRecord record : records) {
+            List<Doctor> sharedDoctors = record.getSharedWithDoctors();
+            if (sharedDoctors == null) {
+                sharedDoctors = new java.util.ArrayList<>();
+            }
+            if (!sharedDoctors.contains(doctor)) {
+                sharedDoctors.add(doctor);
+                record.setSharedWithDoctors(sharedDoctors);
+                medicalRecordRepository.save(record);
+            }
+        }
+    }
 }

@@ -96,6 +96,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(JwtException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponse handleJwtException(JwtException jwtException) {
+        System.out.println(jwtException.getMessage());
         return new ErrorResponse(jwtException.getMessage(), HttpStatus.UNAUTHORIZED.value());
     }
 

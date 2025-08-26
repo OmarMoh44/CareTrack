@@ -55,4 +55,10 @@ public class PatientController {
                                               @RequestParam(defaultValue = "10") int size){
         return patientService.doctorsSearch(searchRequest, page, size);
     }
+
+    @GetMapping("/doctors/{doctorId}")
+    @PreAuthorize("hasAuthority('PATIENT')")
+    public DoctorMainView getDoctorById(@PathVariable Long doctorId){
+        return patientService.getDoctorById(doctorId);
+    }
 }

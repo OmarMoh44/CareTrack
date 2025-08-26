@@ -102,6 +102,11 @@ public class AuthController {
         return body;
     }
 
+    @PostMapping("/forget-password")
+    public Map<String, Object> forgetPassword(@RequestBody @Valid ForgetPasswordRequest forgetPasswordRequest) {
+        return authService.forgetPassword(forgetPasswordRequest);
+    }
+
     @GetMapping("/logout")
     @PreAuthorize("hasAnyAuthority('PATIENT', 'DOCTOR')")
     public String logout(HttpServletResponse response) {

@@ -1,11 +1,9 @@
 package org.example.backend.service;
 
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.example.backend.dto.DoctorMainView;
-import org.example.backend.dto.LoginRequest;
-import org.example.backend.dto.UserMainView;
-import org.example.backend.dto.UserRegisterRequest;
+import org.example.backend.dto.*;
 import org.example.backend.exception.ErrorMessage;
 import org.example.backend.jwt.JwtService;
 import org.example.backend.model.Patient;
@@ -61,5 +59,16 @@ public class AuthService {
 
     public void deleteAccount(User authenticatedUser) {
         userRepository.deleteById(authenticatedUser.getId());
+    }
+
+    public Map<String, Object> forgetPassword(ForgetPasswordRequest forgetPasswordRequest) {
+        User foundedUser = userRepository.findByEmail(forgetPasswordRequest.getEmail()).orElseThrow(
+                () -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND.getMessage())
+        );
+        foundedUser.setPassword(passwordEncoder.encode(forgetPasswordRequest.getNewPassword()));
+        User updatedUser = userRepository.save(foundedUser);
+        Map<String, Object> map = new HashMap<>();
+        map.put("message", "Password updated successfully");
+        return map;
     }
 }

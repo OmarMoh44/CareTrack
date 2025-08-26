@@ -1,6 +1,7 @@
 package org.example.backend.model;
 
 public enum City {
+    ALL,
     CAIRO,
     GIZA,
     ALEXANDRIA,

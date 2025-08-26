@@ -64,6 +64,7 @@ public class SecurityConfiguration {
                                 // we don't add context-path in request matchers
                                 "/login",
                                 "/register/**",
+                                "/forget-password",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",

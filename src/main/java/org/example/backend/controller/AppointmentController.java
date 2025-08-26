@@ -34,6 +34,7 @@ public class AppointmentController {
     @PreAuthorize("hasAuthority('PATIENT')")
     public AppointmentResponse bookAppointment(@RequestBody @Valid BookAppointmentRequest request,
             Authentication authentication) {
+        System.out.println(request.toString());
         Patient authenticatedUser = (Patient) authentication.getPrincipal();
         return appointmentService.bookAppointment(request, authenticatedUser);
     }

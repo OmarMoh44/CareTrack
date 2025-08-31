@@ -19,6 +19,7 @@ import org.example.backend.repository.PatientRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -57,7 +58,7 @@ public class PatientService {
     }
 
     public List<DoctorMainView> doctorsSearch(DoctorSearchRequest searchRequest, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("doctorSpeciality", "fullName").ascending());
         // Case 1: All specialities and cities
         if (searchRequest.getDoctorSpeciality() == DoctorSpeciality.ALL && searchRequest.getCity() == City.ALL) {
             return doctorRepository.findAll(pageable).getContent().stream()

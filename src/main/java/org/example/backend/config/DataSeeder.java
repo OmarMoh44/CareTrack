@@ -30,7 +30,7 @@ public class DataSeeder {
             Faker faker = new Faker(new Locale("en"));
 
             // Create 20 Patients
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < 5; i++) {
                 Patient patient = Patient.builder()
                         .fullName(faker.name().fullName())
                         .email("patient" + i + "@gmail.com")
@@ -54,9 +54,9 @@ public class DataSeeder {
                         .email("doctor" + i + "@gmail.com")
                         .password(passwordEncoder.encode("password"))
                         .phoneNumber("011" + faker.number().digits(8))
-                        .city(cities[faker.number().numberBetween(0, cities.length)])
+                        .city(cities[faker.number().numberBetween(1, cities.length)])
                         .street(faker.address().streetName())
-                        .doctorSpeciality(specialities[faker.number().numberBetween(0, specialities.length)])
+                        .doctorSpeciality(specialities[faker.number().numberBetween(1, specialities.length)])
                         .info(faker.lorem().sentence(10))
                         .patientNumber(faker.number().numberBetween(5, 50))
                         .startTime(LocalTime.of(9, 0))
@@ -70,7 +70,7 @@ public class DataSeeder {
                 userRepository.save(doctor);
             }
 
-            System.out.println("Seeded 20 patients and 20 doctors.");
+            System.out.println("Seeded 5 patients and 20 doctors.");
         };
     }
 }

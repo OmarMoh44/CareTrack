@@ -1,5 +1,7 @@
 package org.example.backend.controller;
 
+import jakarta.validation.Valid;
+import org.example.backend.dto.AddMedicalRecordRequest;
 import org.example.backend.model.User;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -108,11 +110,14 @@ public class MedicalRecordController {
 
         @PostMapping
         @PreAuthorize("hasAuthority('DOCTOR')")
-        public MedicalRecord createMedicalRecord(@RequestBody MedicalRecord newRecord,
+        public void createMedicalRecord(@RequestBody @Valid AddMedicalRecordRequest newRecord,
                         @AuthenticationPrincipal User user) {
+                System.out.println("Creating record: " + newRecord.toString());
                 Doctor doctor = (Doctor) user;
-                newRecord.setDoctor(doctor);
-                return medicalRecordService.saveRecord(newRecord);
+                MedicalRecord record = medicalRecordService.addMedicalRecod(newRecord, doctor);
+                medicalRecordService.shareRecordWithDoctor(record, doctorRepository.findById(doctor.getId()).orElseThrow(
+                                () -> new RuntimeException("Doctor not found")
+                ));
         }
 
         @PostMapping("/share-all")

@@ -10,6 +10,7 @@ import org.example.backend.repository.AppointmentRepository;
 import org.example.backend.repository.DoctorRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +28,7 @@ public class AppointmentService {
 
     public List<AppointmentResponse> getAppointments(User authenticatedUser, int page, int size) {
         List<Appointment> appointments = new ArrayList<>();
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("date").ascending());
         if (authenticatedUser.getRole() == Role.PATIENT) {
             Patient patient = (Patient) authenticatedUser;
             appointments = appointmentRepository.findByPatientIdAndDateGreaterThanEqual(patient.getId(),

@@ -1,9 +1,11 @@
 package org.example.backend.service;
 
+import org.example.backend.dto.AddMedicalRecordRequest;
 import org.example.backend.model.MedicalRecord;
 import org.example.backend.model.Patient;
 import org.example.backend.model.Doctor;
 import org.example.backend.repository.MedicalRecordRepository;
+import org.example.backend.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -13,6 +15,8 @@ import java.util.Optional;
 public class MedicalRecordService {
     @Autowired
     private MedicalRecordRepository medicalRecordRepository;
+    @Autowired
+    private PatientRepository patientRepository;
 
     public List<MedicalRecord> getRecordsByPatient(Patient patient) {
         return medicalRecordRepository.findByPatient(patient);
@@ -85,8 +89,29 @@ public class MedicalRecordService {
             if (!sharedDoctors.contains(doctor)) {
                 sharedDoctors.add(doctor);
                 record.setSharedWithDoctors(sharedDoctors);
-                medicalRecordRepository.save(record);
             }
+
+            List<MedicalRecord> doctorRecords = doctor.getAccessibleMedicalRecords();
+            if (doctorRecords == null) {
+                doctorRecords = new java.util.ArrayList<>();
+            }
+            if (!doctorRecords.contains(record)) {
+                doctorRecords.add(record);
+                doctor.setAccessibleMedicalRecords(doctorRecords);
+            }
+            medicalRecordRepository.save(record);
         }
+    }
+
+    public MedicalRecord addMedicalRecod(AddMedicalRecordRequest newRecord, Doctor doctor) {
+        Patient patient = patientRepository.findById(newRecord.getPatientId())
+                .orElseThrow(() -> new RuntimeException("Patient not found"));
+        MedicalRecord record = MedicalRecord.builder()
+                .content(newRecord.getContent())
+                .date(newRecord.getDate())
+                .doctor(doctor)
+                .patient(patient)
+                .build();
+        return medicalRecordRepository.save(record);
     }
 }

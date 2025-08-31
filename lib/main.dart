@@ -1,4 +1,4 @@
-import 'package:caretrack/welcome_screen.dart';
+import 'package:flutter_app/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 

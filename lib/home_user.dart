@@ -1,8 +1,8 @@
-import 'package:caretrack/dr_details.dart';
-import 'package:caretrack/our_doctors.dart';
-import 'package:caretrack/profile.dart';
-import 'package:caretrack/search.dart';
-import 'package:caretrack/user_appo.dart';
+import 'package:flutter_app/dr_details.dart';
+import 'package:flutter_app/our_doctors.dart';
+import 'package:flutter_app/profile.dart';
+import 'package:flutter_app/search.dart';
+import 'package:flutter_app/user_appo.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -163,9 +163,8 @@ class _HomePageState extends State<HomePage> {
 
       if (response.statusCode == 200) {
         final dynamic decodedData = json.decode(response.body);
-        final List<dynamic> data = decodedData is List
-            ? decodedData
-            : [decodedData];
+        final List<dynamic> data =
+            decodedData is List ? decodedData : [decodedData];
         setState(() {
           doctors = data.map((json) => Doctor.fromJson(json)).toList();
           isLoadingDoctors = false;
@@ -285,12 +284,12 @@ class _HomePageState extends State<HomePage> {
                             isLoadingPatient
                                 ? const CircularProgressIndicator()
                                 : Text(
-                                    patient?.name ?? 'User',
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      color: Color(0xFF2C3E50),
-                                    ),
+                                  patient?.name ?? 'User',
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    color: Color(0xFF2C3E50),
                                   ),
+                                ),
                             const SizedBox(height: 8),
                             const Text(
                               'How is going today?',
@@ -377,8 +376,8 @@ class _HomePageState extends State<HomePage> {
                       vertical: 10,
                     ),
                     itemCount: doctors.length,
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 10),
+                    separatorBuilder:
+                        (context, index) => const SizedBox(height: 10),
                     itemBuilder: (context, index) {
                       final doctor = doctors[index];
                       return DoctorCard(

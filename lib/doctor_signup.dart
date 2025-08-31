@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:caretrack/doctor_login.dart';
-import 'package:caretrack/home_dr.dart';
+import 'package:flutter_app/doctor_login.dart';
+import 'package:flutter_app/home_dr.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -103,16 +103,17 @@ class _MyAppState extends State<DoctorSignup> {
   void _showError(String title, String message) {
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: Text(title),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
+      builder:
+          (_) => AlertDialog(
+            title: Text(title),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
@@ -234,16 +235,18 @@ class _MyAppState extends State<DoctorSignup> {
                           width: double.infinity,
                           child: DropdownButtonFormField<String>(
                             value: _selectedSpecialty,
-                            items: _specialties
-                                .map(
-                                  (s) => DropdownMenuItem(
-                                    value: s,
-                                    child: Text(s),
-                                  ),
-                                )
-                                .toList(),
-                            onChanged: (value) =>
-                                setState(() => _selectedSpecialty = value),
+                            items:
+                                _specialties
+                                    .map(
+                                      (s) => DropdownMenuItem(
+                                        value: s,
+                                        child: Text(s),
+                                      ),
+                                    )
+                                    .toList(),
+                            onChanged:
+                                (value) =>
+                                    setState(() => _selectedSpecialty = value),
                             decoration: InputDecoration(
                               hintText: "Specialty",
                               prefixIcon: const Icon(Icons.local_hospital),
@@ -251,9 +254,11 @@ class _MyAppState extends State<DoctorSignup> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            validator: (value) => value == null
-                                ? 'Please select a specialty'
-                                : null,
+                            validator:
+                                (value) =>
+                                    value == null
+                                        ? 'Please select a specialty'
+                                        : null,
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -420,14 +425,15 @@ class _MyAppState extends State<DoctorSignup> {
                               foregroundColor: Colors.white,
                             ),
                             onPressed: _loading ? null : _registerDoctor,
-                            child: _loading
-                                ? const CircularProgressIndicator()
-                                : Text(
-                                    'Create Account',
-                                    style: TextStyle(
-                                      fontSize: isSmallScreen ? 14 : 18,
+                            child:
+                                _loading
+                                    ? const CircularProgressIndicator()
+                                    : Text(
+                                      'Create Account',
+                                      style: TextStyle(
+                                        fontSize: isSmallScreen ? 14 : 18,
+                                      ),
                                     ),
-                                  ),
                           ),
                         ),
                         const SizedBox(height: 20),

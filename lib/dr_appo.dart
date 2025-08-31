@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:caretrack/home_dr.dart';
-import 'package:caretrack/medical_record.dart';
-import 'package:caretrack/add_medical_record.dart';
+import 'package:flutter_app/home_dr.dart';
+import 'package:flutter_app/medical_record.dart';
+import 'package:flutter_app/add_medical_record.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
@@ -132,9 +132,10 @@ class DrAppo extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: BlocProvider(
-        create: (_) =>
-            DoctorAppointmentCubit(DoctorAppointmentRepository())
-              ..loadAppointments(),
+        create:
+            (_) =>
+                DoctorAppointmentCubit(DoctorAppointmentRepository())
+                  ..loadAppointments(),
         child: Scaffold(
           appBar: AppBar(
             toolbarHeight: 100,
@@ -230,15 +231,16 @@ class DrAppo extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => BlocProvider(
-                                      create: (_) =>
-                                          MedicalRecordCubit(
-                                            MedicalRecordRepository(),
-                                          )..loadPatientRecords(
-                                            appointment.patientId,
-                                          ), // ✅ use patientId
-                                      child: const MedicalRecordPage(),
-                                    ),
+                                    builder:
+                                        (context) => BlocProvider(
+                                          create:
+                                              (_) => MedicalRecordCubit(
+                                                MedicalRecordRepository(),
+                                              )..loadPatientRecords(
+                                                appointment.patientId,
+                                              ), // ✅ use patientId
+                                          child: const MedicalRecordPage(),
+                                        ),
                                   ),
                                 );
                               },
@@ -266,10 +268,11 @@ class DrAppo extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => AddMedicalRecord(
-                                      patientId: appointment.patientId,
-                                      patientName: appointment.patientName,
-                                    ),
+                                    builder:
+                                        (context) => AddMedicalRecord(
+                                          patientId: appointment.patientId,
+                                          patientName: appointment.patientName,
+                                        ),
                                   ),
                                 );
                               },

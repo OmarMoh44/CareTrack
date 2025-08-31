@@ -1,5 +1,5 @@
-import 'package:caretrack/appo_datetime.dart';
-import 'package:caretrack/our_doctors.dart';
+import 'package:flutter_app/appo_datetime.dart';
+import 'package:flutter_app/our_doctors.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -354,9 +354,10 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen>
         "rating": "4.5",
         "distance": "${doctorData.city ?? 'Cairo'}, Egypt",
         "price": _formatPrice(doctorData.consultationFee),
-        "about": doctorData.info.isNotEmpty
-            ? doctorData.info
-            : "Dr. ${doctorData.fullName ?? 'Unknown'} is a qualified specialist in ${_formatSpecialty(doctorData.doctorSpeciality ?? 'General Practice')}. They are available for consultation and treatment.",
+        "about":
+            doctorData.info.isNotEmpty
+                ? doctorData.info
+                : "Dr. ${doctorData.fullName ?? 'Unknown'} is a qualified specialist in ${_formatSpecialty(doctorData.doctorSpeciality ?? 'General Practice')}. They are available for consultation and treatment.",
         "workingTime": _formatWorkingTime(
           doctorData.startTime,
           doctorData.endTime,
@@ -394,16 +395,17 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen>
     if (!mounted) return;
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(title),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
+      builder:
+          (context) => AlertDialog(
+            title: Text(title),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
@@ -440,318 +442,327 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen>
           ),
         ],
       ),
-      body: isLoading
-          ? const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 16),
-                  Text('Loading doctor information...'),
-                ],
-              ),
-            )
-          : doctor == null
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error_outline, size: 64, color: Colors.grey),
-                  const SizedBox(height: 16),
-                  const Text('Failed to load doctor information'),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _loadData,
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
-            )
-          : Column(
-              children: [
-                // Doctor Info Card
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.shade200,
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
+      body:
+          isLoading
+              ? const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(height: 16),
+                    Text('Loading doctor information...'),
+                  ],
+                ),
+              )
+              : doctor == null
+              ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.error_outline,
+                      size: 64,
+                      color: Colors.grey,
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    const SizedBox(height: 16),
+                    const Text('Failed to load doctor information'),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: _loadData,
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
+              )
+              : Column(
+                children: [
+                  // Doctor Info Card
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade200,
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  doctor!["name"],
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  doctor!["specialization"],
+                                  style: const TextStyle(color: Colors.grey),
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.star,
+                                      color: Colors.blue,
+                                      size: 18,
+                                    ),
+                                    Text(
+                                      " ${doctor!["rating"]}",
+                                      style: const TextStyle(
+                                        color: Colors.blue,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    const Icon(
+                                      Icons.location_on,
+                                      color: Colors.grey,
+                                      size: 18,
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        doctor!["distance"],
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Text(
+                            doctor!["price"],
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Tab Bar
+                  TabBar(
+                    controller: _tabController,
+                    labelColor: Colors.blue,
+                    unselectedLabelColor: Colors.grey,
+                    tabs: const [Tab(text: "About"), Tab(text: "Location")],
+                  ),
+
+                  // Tab Bar View
+                  Expanded(
+                    child: TabBarView(
+                      controller: _tabController,
                       children: [
-                        Expanded(
+                        // About Tab
+                        SingleChildScrollView(
+                          padding: const EdgeInsets.all(16),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                doctor!["name"],
-                                style: const TextStyle(
+                              const Text(
+                                "About me",
+                                style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              const SizedBox(height: 4),
+                              const SizedBox(height: 8),
                               Text(
-                                doctor!["specialization"],
-                                style: const TextStyle(color: Colors.grey),
+                                doctor!["about"],
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  height: 1.5,
+                                ),
+                              ),
+                              const SizedBox(height: 24),
+                              const Text(
+                                "Working Time",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               const SizedBox(height: 8),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.star,
-                                    color: Colors.blue,
-                                    size: 18,
-                                  ),
-                                  Text(
-                                    " ${doctor!["rating"]}",
-                                    style: const TextStyle(color: Colors.blue),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  const Icon(
-                                    Icons.location_on,
-                                    color: Colors.grey,
-                                    size: 18,
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      doctor!["distance"],
-                                      style: const TextStyle(
-                                        color: Colors.grey,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
+                              Text(
+                                doctor!["workingTime"],
+                                style: const TextStyle(color: Colors.grey),
                               ),
+                              const SizedBox(height: 24),
+                              if (doctor!["experience"] != null) ...[
+                                const Text(
+                                  "Experience",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  doctor!["experience"],
+                                  style: const TextStyle(color: Colors.grey),
+                                ),
+                                const SizedBox(height: 24),
+                              ],
+                              if (doctor!["qualification"] != null) ...[
+                                const Text(
+                                  "Qualification",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  doctor!["qualification"],
+                                  style: const TextStyle(color: Colors.grey),
+                                ),
+                              ],
                             ],
                           ),
                         ),
-                        const SizedBox(width: 16),
-                        Text(
-                          doctor!["price"],
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.green,
+
+                        // Location Tab
+                        SingleChildScrollView(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Practice Location",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                doctor!["location"],
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  height: 1.5,
+                                ),
+                              ),
+                              const SizedBox(height: 24),
+                              if (doctor!["phone"] != null &&
+                                  doctor!["phone"].toString().isNotEmpty) ...[
+                                const Text(
+                                  "Phone",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.phone,
+                                      color: Colors.blue,
+                                      size: 20,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      doctor!["phone"],
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+                              ],
+                              if (doctor!["email"] != null &&
+                                  doctor!["email"].toString().isNotEmpty) ...[
+                                const Text(
+                                  "Email",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.email,
+                                      color: Colors.blue,
+                                      size: 20,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      doctor!["email"],
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
 
-                // Tab Bar
-                TabBar(
-                  controller: _tabController,
-                  labelColor: Colors.blue,
-                  unselectedLabelColor: Colors.grey,
-                  tabs: const [
-                    Tab(text: "About"),
-                    Tab(text: "Location"),
-                  ],
-                ),
-
-                // Tab Bar View
-                Expanded(
-                  child: TabBarView(
-                    controller: _tabController,
-                    children: [
-                      // About Tab
-                      SingleChildScrollView(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "About me",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              doctor!["about"],
-                              style: const TextStyle(
-                                color: Colors.grey,
-                                height: 1.5,
-                              ),
-                            ),
-                            const SizedBox(height: 24),
-                            const Text(
-                              "Working Time",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              doctor!["workingTime"],
-                              style: const TextStyle(color: Colors.grey),
-                            ),
-                            const SizedBox(height: 24),
-                            if (doctor!["experience"] != null) ...[
-                              const Text(
-                                "Experience",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                doctor!["experience"],
-                                style: const TextStyle(color: Colors.grey),
-                              ),
-                              const SizedBox(height: 24),
-                            ],
-                            if (doctor!["qualification"] != null) ...[
-                              const Text(
-                                "Qualification",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                doctor!["qualification"],
-                                style: const TextStyle(color: Colors.grey),
-                              ),
-                            ],
-                          ],
+                  // Make Appointment Button
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(double.infinity, 50),
+                        backgroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-
-                      // Location Tab
-                      SingleChildScrollView(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "Practice Location",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              doctor!["location"],
-                              style: const TextStyle(
-                                color: Colors.grey,
-                                height: 1.5,
-                              ),
-                            ),
-                            const SizedBox(height: 24),
-                            if (doctor!["phone"] != null &&
-                                doctor!["phone"].toString().isNotEmpty) ...[
-                              const Text(
-                                "Phone",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => AppoDatetime(
+                                  doctorId: int.parse(doctor!["id"].toString()),
+                                  consultationFee:
+                                      double.tryParse(
+                                        doctor!["price"].toString().replaceAll(
+                                          RegExp(r'[^\d.]'),
+                                          '',
+                                        ),
+                                      ) ??
+                                      0.0,
                                 ),
-                              ),
-                              const SizedBox(height: 8),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.phone,
-                                    color: Colors.blue,
-                                    size: 20,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    doctor!["phone"],
-                                    style: const TextStyle(color: Colors.grey),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 16),
-                            ],
-                            if (doctor!["email"] != null &&
-                                doctor!["email"].toString().isNotEmpty) ...[
-                              const Text(
-                                "Email",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.email,
-                                    color: Colors.blue,
-                                    size: 20,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    doctor!["email"],
-                                    style: const TextStyle(color: Colors.grey),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Make Appointment Button
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 50),
-                      backgroundColor: Colors.blue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AppoDatetime(
-                            doctorId: int.parse(doctor!["id"].toString()),
-                            consultationFee:
-                                double.tryParse(
-                                  doctor!["price"].toString().replaceAll(
-                                    RegExp(r'[^\d.]'),
-                                    '',
-                                  ),
-                                ) ??
-                                0.0,
                           ),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      "Make An Appointment",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+                        );
+                      },
+                      child: const Text(
+                        "Make An Appointment",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
     );
   }
 }

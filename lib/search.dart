@@ -1,7 +1,7 @@
-import 'package:caretrack/dr_details.dart';
-import 'package:caretrack/home_user.dart';
-import 'package:caretrack/medical_record.dart';
-import 'package:caretrack/profile.dart';
+import 'package:flutter_app/dr_details.dart';
+import 'package:flutter_app/home_user.dart';
+import 'package:flutter_app/medical_record.dart';
+import 'package:flutter_app/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:convert';
@@ -481,10 +481,7 @@ class DoctorCard extends StatelessWidget {
           ],
         ),
         child: Row(
-          children: [
-            Expanded(child: _buildDoctorInfo()),
-            _buildPrice(),
-          ],
+          children: [Expanded(child: _buildDoctorInfo()), _buildPrice()],
         ),
       ),
     );
@@ -625,18 +622,19 @@ class _SearchPageState extends State<SearchPage> {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: specialties
-                  .map(
-                    (specialty) => Padding(
-                      padding: const EdgeInsets.only(right: 12),
-                      child: FilterChip(
-                        label: specialty.displayName,
-                        isSelected: specialty == _filters.specialty,
-                        onTap: () => _updateFilter(specialty: specialty),
-                      ),
-                    ),
-                  )
-                  .toList(),
+              children:
+                  specialties
+                      .map(
+                        (specialty) => Padding(
+                          padding: const EdgeInsets.only(right: 12),
+                          child: FilterChip(
+                            label: specialty.displayName,
+                            isSelected: specialty == _filters.specialty,
+                            onTap: () => _updateFilter(specialty: specialty),
+                          ),
+                        ),
+                      )
+                      .toList(),
             ),
           ),
           const SizedBox(height: 24),
@@ -770,13 +768,14 @@ class _SearchPageState extends State<SearchPage> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => FilterBottomSheet(
-        filters: _filters,
-        onFiltersChanged: (newFilters) {
-          setState(() => _filters = newFilters);
-          _loadDoctors();
-        },
-      ),
+      builder:
+          (context) => FilterBottomSheet(
+            filters: _filters,
+            onFiltersChanged: (newFilters) {
+              setState(() => _filters = newFilters);
+              _loadDoctors();
+            },
+          ),
     );
   }
 }
@@ -866,15 +865,16 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: specialties
-                .map(
-                  (specialty) => FilterChip(
-                    label: specialty.displayName,
-                    isSelected: specialty == _tempFilters.specialty,
-                    onTap: () => _updateSpecialty(specialty),
-                  ),
-                )
-                .toList(),
+            children:
+                specialties
+                    .map(
+                      (specialty) => FilterChip(
+                        label: specialty.displayName,
+                        isSelected: specialty == _tempFilters.specialty,
+                        onTap: () => _updateSpecialty(specialty),
+                      ),
+                    )
+                    .toList(),
           ),
           const SizedBox(height: 24),
         ],
@@ -895,15 +895,16 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: cities
-                .map(
-                  (city) => FilterChip(
-                    label: city.displayName,
-                    isSelected: city == _tempFilters.city,
-                    onTap: () => _updateCity(city),
-                  ),
-                )
-                .toList(),
+            children:
+                cities
+                    .map(
+                      (city) => FilterChip(
+                        label: city.displayName,
+                        isSelected: city == _tempFilters.city,
+                        onTap: () => _updateCity(city),
+                      ),
+                    )
+                    .toList(),
           ),
         ],
       ),

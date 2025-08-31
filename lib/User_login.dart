@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:caretrack/forget_password.dart';
-import 'package:caretrack/home_user.dart';
-import 'package:caretrack/user_signup.dart';
+import 'package:flutter_app/forget_password.dart';
+import 'package:flutter_app/home_user.dart';
+import 'package:flutter_app/user_signup.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -76,16 +76,17 @@ class _UserLoginState extends State<UserLogin> {
   void _showError(String title, String message) {
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: Text(title),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
+      builder:
+          (_) => AlertDialog(
+            title: Text(title),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
@@ -212,14 +213,15 @@ class _UserLoginState extends State<UserLogin> {
                         foregroundColor: Colors.white,
                       ),
                       onPressed: _loading ? null : _login,
-                      child: _loading
-                          ? const CircularProgressIndicator()
-                          : Text(
-                              'Login',
-                              style: TextStyle(
-                                fontSize: isSmallScreen ? 14 : 18,
+                      child:
+                          _loading
+                              ? const CircularProgressIndicator()
+                              : Text(
+                                'Login',
+                                style: TextStyle(
+                                  fontSize: isSmallScreen ? 14 : 18,
+                                ),
                               ),
-                            ),
                     ),
                   ),
                   const SizedBox(height: 20),

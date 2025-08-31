@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:caretrack/dr_appo.dart';
-import 'package:caretrack/welcome_screen.dart';
+import 'package:flutter_app/dr_appo.dart';
+import 'package:flutter_app/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
@@ -131,8 +131,9 @@ class HomeDr extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: BlocProvider(
-        create: (context) =>
-            DoctorProfileCubit(DoctorProfileRepository())..loadProfile(),
+        create:
+            (context) =>
+                DoctorProfileCubit(DoctorProfileRepository())..loadProfile(),
         child: Scaffold(
           backgroundColor: const Color(0xFFDFEFFF),
           appBar: AppBar(

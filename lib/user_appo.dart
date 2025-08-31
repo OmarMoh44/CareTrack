@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:caretrack/home_user.dart';
+import 'package:flutter_app/home_user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
@@ -133,9 +133,10 @@ class UserAppo extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: BlocProvider(
-        create: (_) =>
-            UserAppointmentCubit(UserAppointmentRepository())
-              ..loadAppointments(),
+        create:
+            (_) =>
+                UserAppointmentCubit(UserAppointmentRepository())
+                  ..loadAppointments(),
         child: Scaffold(
           appBar: AppBar(
             toolbarHeight: 80,

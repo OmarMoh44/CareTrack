@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'package:caretrack/home_user.dart';
-import 'package:caretrack/medical_record.dart';
-import 'package:caretrack/personal_info.dart';
-import 'package:caretrack/user_appo.dart';
-import 'package:caretrack/welcome_screen.dart';
+import 'package:flutter_app/home_user.dart';
+import 'package:flutter_app/medical_record.dart';
+import 'package:flutter_app/personal_info.dart';
+import 'package:flutter_app/user_appo.dart';
+import 'package:flutter_app/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
@@ -81,8 +81,9 @@ class Profile extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: BlocProvider(
-        create: (context) =>
-            UserProfileCubit(UserProfileRepository())..loadProfile(),
+        create:
+            (context) =>
+                UserProfileCubit(UserProfileRepository())..loadProfile(),
         child: const ProfileScreen(),
       ),
     );
@@ -280,14 +281,16 @@ class ProfileScreen extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => BlocProvider(
-                                      create: (_) => MedicalRecordCubit(
-                                        MedicalRecordRepository(),
-                                      )..loadRecords(),
-                                      child: MedicalRecordPage(
-                                        previousPage: const Profile(),
-                                      ),
-                                    ),
+                                    builder:
+                                        (context) => BlocProvider(
+                                          create:
+                                              (_) => MedicalRecordCubit(
+                                                MedicalRecordRepository(),
+                                              )..loadRecords(),
+                                          child: MedicalRecordPage(
+                                            previousPage: const Profile(),
+                                          ),
+                                        ),
                                   ),
                                 );
                               },

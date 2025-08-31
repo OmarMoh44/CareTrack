@@ -1,5 +1,5 @@
-import 'package:caretrack/User_login.dart';
-import 'package:caretrack/doctor_login.dart';
+import 'package:flutter_app/User_login.dart';
+import 'package:flutter_app/doctor_login.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatelessWidget {

@@ -1,4 +1,4 @@
-import 'package:caretrack/profile.dart';
+import 'package:flutter_app/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -158,9 +158,10 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
           'Session expired. Please login again',
         );
       } else {
-        final errorMessage = response.body.isNotEmpty
-            ? jsonDecode(response.body)['message'] ?? 'Save failed'
-            : 'Save failed';
+        final errorMessage =
+            response.body.isNotEmpty
+                ? jsonDecode(response.body)['message'] ?? 'Save failed'
+                : 'Save failed';
         _showError('Save Failed', errorMessage);
       }
     } catch (e) {
@@ -177,16 +178,17 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
   void _showError(String title, String message) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(title),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
+      builder:
+          (context) => AlertDialog(
+            title: Text(title),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
@@ -231,144 +233,154 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
         ),
         centerTitle: true,
       ),
-      body: _isLoading
-          ? const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 16),
-                  Text('Loading your information...'),
-                ],
-              ),
-            )
-          : GestureDetector(
-              onTap: () => FocusScope.of(context).unfocus(),
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(20),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 20),
+      body:
+          _isLoading
+              ? const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(height: 16),
+                    Text('Loading your information...'),
+                  ],
+                ),
+              )
+              : GestureDetector(
+                onTap: () => FocusScope.of(context).unfocus(),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(20),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 20),
 
-                      CircleAvatar(
-                        radius: 60,
-                        backgroundColor: Colors.purple[100],
-                        child: const Icon(
-                          Icons.person,
-                          size: 60,
-                          color: Colors.brown,
-                        ),
-                      ),
-
-                      const SizedBox(height: 40),
-
-                      buildTextField(
-                        controller: nameController,
-                        hint: 'Full Name',
-                        validator: (value) => value!.isEmpty
-                            ? 'Please enter your full name'
-                            : null,
-                      ),
-                      const SizedBox(height: 20),
-
-                      buildTextField(
-                        controller: emailController,
-                        hint: 'Email',
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (value) =>
-                            isValidEmail(value!) ? null : 'Enter a valid email',
-                      ),
-                      const SizedBox(height: 20),
-
-                      buildTextField(
-                        controller: passwordController,
-                        hint: 'New Password (leave empty to keep current)',
-                        obscureText: !isPasswordVisible,
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            isPasswordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
+                        CircleAvatar(
+                          radius: 60,
+                          backgroundColor: Colors.purple[100],
+                          child: const Icon(
+                            Icons.person,
+                            size: 60,
+                            color: Colors.brown,
                           ),
-                          onPressed: () {
-                            setState(
-                              () => isPasswordVisible = !isPasswordVisible,
-                            );
+                        ),
+
+                        const SizedBox(height: 40),
+
+                        buildTextField(
+                          controller: nameController,
+                          hint: 'Full Name',
+                          validator:
+                              (value) =>
+                                  value!.isEmpty
+                                      ? 'Please enter your full name'
+                                      : null,
+                        ),
+                        const SizedBox(height: 20),
+
+                        buildTextField(
+                          controller: emailController,
+                          hint: 'Email',
+                          keyboardType: TextInputType.emailAddress,
+                          validator:
+                              (value) =>
+                                  isValidEmail(value!)
+                                      ? null
+                                      : 'Enter a valid email',
+                        ),
+                        const SizedBox(height: 20),
+
+                        buildTextField(
+                          controller: passwordController,
+                          hint: 'New Password (leave empty to keep current)',
+                          obscureText: !isPasswordVisible,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              isPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(
+                                () => isPasswordVisible = !isPasswordVisible,
+                              );
+                            },
+                          ),
+                          validator: (value) {
+                            // Password is optional for updates
+                            if (value != null &&
+                                value.isNotEmpty &&
+                                value.length < 6) {
+                              return 'Password must be at least 6 characters';
+                            }
+                            return null;
                           },
                         ),
-                        validator: (value) {
-                          // Password is optional for updates
-                          if (value != null &&
-                              value.isNotEmpty &&
-                              value.length < 6) {
-                            return 'Password must be at least 6 characters';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 20),
+                        const SizedBox(height: 20),
 
-                      buildTextField(
-                        controller: phoneController,
-                        hint: 'Phone Number',
-                        keyboardType: TextInputType.phone,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter your phone number';
-                          }
-                          if (!RegExp(r'^\d{11}$').hasMatch(value)) {
-                            return 'Please enter a valid 11-digit phone number';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 30),
-
-                      Text(
-                        'Please provide accurate information to avoid any issues.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.grey[600], fontSize: 14),
-                      ),
-                      const SizedBox(height: 40),
-
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: _isSaving ? null : _saveUserInfo,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
-                            ),
-                          ),
-                          child: _isSaving
-                              ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                              : const Text(
-                                  'Save',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                  ),
-                                ),
+                        buildTextField(
+                          controller: phoneController,
+                          hint: 'Phone Number',
+                          keyboardType: TextInputType.phone,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter your phone number';
+                            }
+                            if (!RegExp(r'^\d{11}$').hasMatch(value)) {
+                              return 'Please enter a valid 11-digit phone number';
+                            }
+                            return null;
+                          },
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 30),
+
+                        Text(
+                          'Please provide accurate information to avoid any issues.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 40),
+
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: _isSaving ? null : _saveUserInfo,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                            ),
+                            child:
+                                _isSaving
+                                    ? const SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                    : const Text(
+                                      'Save',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
     );
   }
 

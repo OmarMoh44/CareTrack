@@ -1,7 +1,7 @@
 //user signup
 import 'dart:convert';
-import 'package:caretrack/User_login.dart';
-import 'package:caretrack/home_user.dart';
+import 'package:flutter_app/User_login.dart';
+import 'package:flutter_app/home_user.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -60,16 +60,17 @@ class UserSignup extends StatelessWidget {
   void _showError(BuildContext context, String title, String message) {
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: Text(title),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
+      builder:
+          (_) => AlertDialog(
+            title: Text(title),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 

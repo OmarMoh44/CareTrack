@@ -1,6 +1,6 @@
-import 'package:caretrack/User_login.dart';
-import 'package:caretrack/profile.dart';
-import 'package:caretrack/welcome_screen.dart';
+import 'package:flutter_app/User_login.dart';
+import 'package:flutter_app/profile.dart';
+import 'package:flutter_app/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';

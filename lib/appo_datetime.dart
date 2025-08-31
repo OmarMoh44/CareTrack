@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:caretrack/home_user.dart';
+import 'package:flutter_app/home_user.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -275,9 +275,10 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                                         horizontal: 16,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: isSelected
-                                            ? Color(0xFF2196F3)
-                                            : Colors.transparent,
+                                        color:
+                                            isSelected
+                                                ? Color(0xFF2196F3)
+                                                : Colors.transparent,
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: Column(
@@ -288,9 +289,10 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                                             date["day"]!,
                                             style: TextStyle(
                                               fontSize: 12,
-                                              color: isSelected
-                                                  ? Colors.white
-                                                  : Colors.black54,
+                                              color:
+                                                  isSelected
+                                                      ? Colors.white
+                                                      : Colors.black54,
                                             ),
                                           ),
                                           SizedBox(height: 4),
@@ -299,9 +301,10 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                                             style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
-                                              color: isSelected
-                                                  ? Colors.white
-                                                  : Colors.black87,
+                                              color:
+                                                  isSelected
+                                                      ? Colors.white
+                                                      : Colors.black87,
                                             ),
                                           ),
                                         ],
@@ -411,24 +414,27 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                               width: 20,
                               height: 20,
                               decoration: BoxDecoration(
-                                color: isCashPayment
-                                    ? Color(0xFF2196F3)
-                                    : Colors.transparent,
+                                color:
+                                    isCashPayment
+                                        ? Color(0xFF2196F3)
+                                        : Colors.transparent,
                                 border: Border.all(
-                                  color: isCashPayment
-                                      ? Color(0xFF2196F3)
-                                      : Color(0xFFE0E0E0),
+                                  color:
+                                      isCashPayment
+                                          ? Color(0xFF2196F3)
+                                          : Color(0xFFE0E0E0),
                                   width: 2,
                                 ),
                                 borderRadius: BorderRadius.circular(4),
                               ),
-                              child: isCashPayment
-                                  ? Icon(
-                                      Icons.check,
-                                      color: Colors.white,
-                                      size: 14,
-                                    )
-                                  : null,
+                              child:
+                                  isCashPayment
+                                      ? Icon(
+                                        Icons.check,
+                                        color: Colors.white,
+                                        size: 14,
+                                      )
+                                      : null,
                             ),
                           ),
                           SizedBox(width: 12),

@@ -1,5 +1,5 @@
-import 'package:caretrack/dr_details.dart';
-import 'package:caretrack/home_user.dart';
+import 'package:flutter_app/dr_details.dart';
+import 'package:flutter_app/home_user.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -54,9 +54,10 @@ class Doctor {
       patientNumber: json['patientNumber'] ?? 0,
       startTime: json['startTime'] ?? '09:00',
       endTime: json['endTime'] ?? '17:00',
-      consultationFee: (json['consultationFee'] is String)
-          ? double.tryParse(json['consultationFee']) ?? 0.0
-          : (json['consultationFee']?.toDouble() ?? 0.0),
+      consultationFee:
+          (json['consultationFee'] is String)
+              ? double.tryParse(json['consultationFee']) ?? 0.0
+              : (json['consultationFee']?.toDouble() ?? 0.0),
       availableDays:
           (json['availableDays'] as List<dynamic>?)
               ?.map((day) => day.toString())
@@ -199,93 +200,94 @@ class _OurDoctorsScreenState extends State<OurDoctorsScreen> {
         ),
         backgroundColor: Color(0xFFDFF1FF),
       ),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : doctors.isEmpty
-          ? const Center(
-              child: Text(
-                'No doctors available',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-            )
-          : ListView.separated(
-              padding: const EdgeInsets.all(20),
-              itemCount: doctors.length,
-              separatorBuilder: (_, __) => SizedBox(height: 16),
-              itemBuilder: (context, index) {
-                final doctor = doctors[index];
-                return Container(
-                  height: 120,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(7),
-                    border: Border.all(color: Colors.grey.shade300),
-                  ),
-                  padding: EdgeInsets.all(10),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () => _onDoctorTapped(doctor),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                doctor.name,
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                doctor.specialty,
-                                style: TextStyle(color: Colors.grey.shade600),
-                              ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.star,
-                                    size: 15,
-                                    color: Colors.blue,
-                                  ),
-                                  SizedBox(width: 3),
-                                  Text(
-                                    doctor.rating.toString(),
-                                    style: TextStyle(color: Colors.blue),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.location_on,
-                                    size: 14,
-                                    color: Colors.grey,
-                                  ),
-                                  SizedBox(width: 3),
-                                  Text(
-                                    doctor.distance,
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 12,
+      body:
+          isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : doctors.isEmpty
+              ? const Center(
+                child: Text(
+                  'No doctors available',
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+              )
+              : ListView.separated(
+                padding: const EdgeInsets.all(20),
+                itemCount: doctors.length,
+                separatorBuilder: (_, __) => SizedBox(height: 16),
+                itemBuilder: (context, index) {
+                  final doctor = doctors[index];
+                  return Container(
+                    height: 120,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(7),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    padding: EdgeInsets.all(10),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => _onDoctorTapped(doctor),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  doctor.name,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  doctor.specialty,
+                                  style: TextStyle(color: Colors.grey.shade600),
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.star,
+                                      size: 15,
+                                      color: Colors.blue,
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                    SizedBox(width: 3),
+                                    Text(
+                                      doctor.rating.toString(),
+                                      style: TextStyle(color: Colors.blue),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.location_on,
+                                      size: 14,
+                                      color: Colors.grey,
+                                    ),
+                                    SizedBox(width: 3),
+                                    Text(
+                                      doctor.distance,
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      Container(
-                        width: 80,
-                        alignment: Alignment.center,
-                        child: Text(
-                          doctor.price,
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        Container(
+                          width: 80,
+                          alignment: Alignment.center,
+                          child: Text(
+                            doctor.price,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
+                      ],
+                    ),
+                  );
+                },
+              ),
     );
   }
 }

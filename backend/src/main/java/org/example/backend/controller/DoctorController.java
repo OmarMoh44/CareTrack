@@ -20,7 +20,7 @@ public class DoctorController {
     private final DoctorService doctorService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('DOCTOR')")
+    @PreAuthorize("hasRole('DOCTOR')")
     public DoctorMainView getDoctor(Authentication authentication) {
         User authenticatedUser = (User) authentication.getPrincipal();
         return doctorService.getDoctor(authenticatedUser.getId());
@@ -37,7 +37,7 @@ public class DoctorController {
             )
     )
     @PatchMapping
-    @PreAuthorize("hasAuthority('DOCTOR')")
+    @PreAuthorize("hasRole('DOCTOR')")
     public DoctorMainView updateDoctor(
             @RequestBody Map<String, Object> updates,
             Authentication authentication) throws JsonMappingException {

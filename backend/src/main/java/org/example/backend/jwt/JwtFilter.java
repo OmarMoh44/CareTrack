@@ -32,6 +32,7 @@ public class JwtFilter extends OncePerRequestFilter {
         // these paths do not require authentication
         return path.startsWith("/login")
                 || path.startsWith("/register")
+                || path.equals("/forget-password")
                 || path.startsWith("/swagger-ui")
                 || path.equals("/swagger-ui.html")
                 || path.startsWith("/v3/api-docs")

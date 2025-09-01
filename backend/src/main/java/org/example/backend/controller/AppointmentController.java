@@ -22,7 +22,7 @@ public class AppointmentController {
     private final AppointmentService appointmentService;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('PATIENT', 'DOCTOR')")
+    @PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
     public List<AppointmentResponse> getAppointments(Authentication authentication,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -31,7 +31,7 @@ public class AppointmentController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('PATIENT')")
+    @PreAuthorize("hasRole('PATIENT')")
     public AppointmentResponse bookAppointment(@RequestBody @Valid BookAppointmentRequest request,
             Authentication authentication) {
         System.out.println(request.toString());
@@ -40,7 +40,7 @@ public class AppointmentController {
     }
 
     @PatchMapping
-    @PreAuthorize("hasAnyAuthority('PATIENT', 'DOCTOR')")
+    @PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
     public AppointmentResponse modifyAppointment(@RequestBody @Valid ModifyAppointmentRequest request,
             Authentication authentication) {
         User authenticatedUser = (User) authentication.getPrincipal();
@@ -48,7 +48,7 @@ public class AppointmentController {
     }
 
     @DeleteMapping("/{appointmentId}")
-    @PreAuthorize("hasAnyAuthority('PATIENT', 'DOCTOR')")
+    @PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
     public String cancelAppointment(@PathVariable Long appointmentId,
             Authentication authentication) {
         User authenticatedUser = (User) authentication.getPrincipal();

@@ -108,14 +108,14 @@ public class AuthController {
     }
 
     @GetMapping("/logout")
-    @PreAuthorize("hasAnyAuthority('PATIENT', 'DOCTOR')")
+    @PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
     public String logout(HttpServletResponse response) {
         clearCookie(response);
         return "Logged out successfully";
     }
 
     @DeleteMapping("/delete-account")
-    @PreAuthorize("hasAnyAuthority('PATIENT', 'DOCTOR')")
+    @PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
     public String deleteAccount(Authentication authentication, HttpServletResponse response) {
         User authenticatedUser = (User) authentication.getPrincipal();
         authService.deleteAccount(authenticatedUser);

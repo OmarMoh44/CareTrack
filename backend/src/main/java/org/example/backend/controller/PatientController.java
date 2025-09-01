@@ -24,7 +24,7 @@ public class PatientController {
     private final PatientService patientService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('PATIENT')")
+    @PreAuthorize("hasRole('PATIENT')")
     public UserMainView getPatient(Authentication authentication) {
         User authenticatedUser = (User) authentication.getPrincipal();
         return patientService.getPatient(authenticatedUser.getId());
@@ -41,7 +41,7 @@ public class PatientController {
             )
     )
     @PatchMapping
-    @PreAuthorize("hasAuthority('PATIENT')")
+    @PreAuthorize("hasRole('PATIENT')")
     public UserMainView updatePatient(@RequestBody Map<String, Object> updates,
                                       Authentication authentication) throws JsonMappingException {
         User authenticatedUser = (User) authentication.getPrincipal();
@@ -49,7 +49,7 @@ public class PatientController {
     }
 
     @PostMapping("/doctors-search")
-    @PreAuthorize("hasAuthority('PATIENT')")
+    @PreAuthorize("hasRole('PATIENT')")
     public List<DoctorMainView> doctorsSearch(@RequestBody @Valid DoctorSearchRequest searchRequest,
                                               @RequestParam(defaultValue = "0") int page,
                                               @RequestParam(defaultValue = "10") int size){
@@ -57,7 +57,7 @@ public class PatientController {
     }
 
     @GetMapping("/doctors/{doctorId}")
-    @PreAuthorize("hasAuthority('PATIENT')")
+    @PreAuthorize("hasRole('PATIENT')")
     public DoctorMainView getDoctorById(@PathVariable Long doctorId){
         return patientService.getDoctorById(doctorId);
     }

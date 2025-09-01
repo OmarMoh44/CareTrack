@@ -2,6 +2,15 @@
 
 CareTrack is a comprehensive healthcare management platform consisting of a Spring Boot backend REST API and a Flutter mobile application. The system enables patients to find doctors, book appointments, and manage medical records, while providing doctors with tools to manage their appointments and patient records.
 
+## 📽️ Demo Video
+
+Check out our application in action:
+
+<a href="https://drive.google.com/file/d/1M5If_XWJ1lfllROh37LQUVvpml8gfyGv/view?usp=sharing">Video on google drive</a>
+
+*If the video above doesn't load, you can [download the full video here](https://github.com/OmarMoh44/CareTrack/raw/main/Demo%20Video.mp4)*
+
+
 ## 🏥 Features
 
 ### For Patients

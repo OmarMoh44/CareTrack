@@ -71,7 +71,7 @@ public class SecurityConfiguration {
                                 "/swagger-resources/**",
                                 "/webjars/**")
                         .permitAll()
-                        // .requestMatchers("/patient/**").hasAuthority("PATIENT")   restrict access for specific roles
+                        // .requestMatchers("/patient/**").hasRole("PATIENT")   restrict access for specific roles
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authProvider())

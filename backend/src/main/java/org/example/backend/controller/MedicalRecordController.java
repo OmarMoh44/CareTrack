@@ -21,7 +21,7 @@ public class MedicalRecordController {
         private MedicalRecordService medicalRecordService;
 
         @GetMapping("/patient/me")
-        @PreAuthorize("hasAuthority('PATIENT')")
+        @PreAuthorize("hasRole('PATIENT')")
         public List<org.example.backend.dto.MedicalRecordResponse> getRecordsByPatient(
                         @AuthenticationPrincipal User user) {
                 // user is guaranteed to be a Patient due to role
@@ -51,7 +51,7 @@ public class MedicalRecordController {
         }
 
         @PutMapping("/{recordId}")
-        @PreAuthorize("hasAuthority('DOCTOR')")
+        @PreAuthorize("hasRole('DOCTOR')")
         public MedicalRecord updateMedicalRecord(@PathVariable Long recordId, @RequestBody MedicalRecord updatedRecord,
                         @AuthenticationPrincipal User user) {
                 updatedRecord.setId(recordId);
@@ -64,7 +64,7 @@ public class MedicalRecordController {
         private org.example.backend.repository.DoctorRepository doctorRepository;
 
         @PostMapping("/share")
-        @PreAuthorize("hasAuthority('PATIENT')")
+        @PreAuthorize("hasRole('PATIENT')")
         public void shareRecordWithDoctor(@RequestParam Long recordId, @RequestParam Long doctorId,
                         @AuthenticationPrincipal User user) {
                 // user is guaranteed to be a Patient due to role
@@ -76,7 +76,7 @@ public class MedicalRecordController {
         }
 
         @GetMapping("/shared/doctor/me")
-        @PreAuthorize("hasAuthority('DOCTOR')")
+        @PreAuthorize("hasRole('DOCTOR')")
         public List<org.example.backend.dto.MedicalRecordResponse> getSharedRecordsForDoctor(
                         @AuthenticationPrincipal User user) {
                 // user is guaranteed to be a Doctor due to role
@@ -101,7 +101,7 @@ public class MedicalRecordController {
         }
 
         @GetMapping("/shared/patient/me")
-        @PreAuthorize("hasAuthority('PATIENT')")
+        @PreAuthorize("hasRole('PATIENT')")
         public List<MedicalRecord> getSharedRecordsForPatient(@AuthenticationPrincipal User user) {
                 // user is guaranteed to be a Patient due to role
                 Patient patient = (Patient) user;
@@ -109,7 +109,7 @@ public class MedicalRecordController {
         }
 
         @PostMapping
-        @PreAuthorize("hasAuthority('DOCTOR')")
+        @PreAuthorize("hasRole('DOCTOR')")
         public void createMedicalRecord(@RequestBody @Valid AddMedicalRecordRequest newRecord,
                         @AuthenticationPrincipal User user) {
                 System.out.println("Creating record: " + newRecord.toString());
@@ -121,7 +121,7 @@ public class MedicalRecordController {
         }
 
         @PostMapping("/share-all")
-        @PreAuthorize("hasAuthority('PATIENT')")
+        @PreAuthorize("hasRole('PATIENT')")
         public void shareAllRecordsWithDoctor(@RequestParam Long doctorId, @AuthenticationPrincipal User user) {
                 // user is guaranteed to be a Patient due to role
                 Patient patient = (Patient) user;

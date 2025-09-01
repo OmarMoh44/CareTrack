@@ -90,8 +90,10 @@ public class JwtService {
     public boolean validateToken(String token, User user) {
         final Long id = extractId(token);
         final Role role = extractRole(token);
+        final String email = extractEmail(token);
         return (Objects.equals(id, user.getId()) &&
                 role == user.getRole() &&
+                Objects.equals(email, user.getEmail()) &&
                 !isTokenExpired(token));
     }
 

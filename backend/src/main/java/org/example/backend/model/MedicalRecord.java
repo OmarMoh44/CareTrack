@@ -1,0 +1,67 @@
+package org.example.backend.model;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.*;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+@Builder
+@ToString(exclude = { "doctor", "patient" })
+@Entity
+@Table(name = "medical_records")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class MedicalRecord {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        MedicalRecord that = (MedicalRecord) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank(message = "Must be not null")
+    @Size(min = 25, max = 500, message = "Content must be between 25 and 500 characters")
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String content;
+
+    @NotNull(message = "Must be not null")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Column(nullable = false)
+    private LocalDate date;
+
+    // Doctors who have access to this record
+    @ManyToMany(mappedBy = "accessibleMedicalRecords")
+    private List<Doctor> sharedWithDoctors;
+
+    // The doctor who created the record
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "doctor_id", nullable = false)
+    private Doctor doctor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patient_id", nullable = false)
+    private Patient patient;
+}

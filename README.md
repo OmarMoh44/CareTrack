@@ -6,7 +6,7 @@ CareTrack is a comprehensive healthcare management platform consisting of a Spri
 
 Check out our application in action:
 
-<a href="https://drive.google.com/file/d/1M5If_XWJ1lfllROh37LQUVvpml8gfyGv/view?usp=sharing">Video on google drive</a>
+<a href="https://drive.google.com/file/d/1LSYOAeg5G7WAo767FXir7GuviCgejUbc/view?usp=drive_link">Video on google drive</a>
 
 *If the video above doesn't load, you can [download the full video here](https://github.com/OmarMoh44/CareTrack/raw/main/Demo%20Video.mp4)*
 

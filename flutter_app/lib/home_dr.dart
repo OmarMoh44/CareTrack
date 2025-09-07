@@ -135,9 +135,9 @@ class HomeDr extends StatelessWidget {
             (context) =>
                 DoctorProfileCubit(DoctorProfileRepository())..loadProfile(),
         child: Scaffold(
-          backgroundColor: const Color(0xFFDFEFFF),
+          backgroundColor: Colors.white,
           appBar: AppBar(
-            toolbarHeight: 60,
+            toolbarHeight: 100,
             centerTitle: true,
             backgroundColor: const Color(0xFFDFEFFF),
             elevation: 0,

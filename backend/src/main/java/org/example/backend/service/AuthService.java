@@ -14,6 +14,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+
+import io.jsonwebtoken.JwtException;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashMap;
@@ -29,25 +32,32 @@ public class AuthService {
     private final JwtService jwtService;
     private final ModelMapper modelMapper;
 
-    public String login(LoginRequest loginRequest) {
+    public Map<String, Object> login(LoginRequest loginRequest) {
         // runs UserDetailsService bean to find user from DB and compares passwords
-        Authentication authentication = authenticationManager.authenticate
-                (new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-        if (authentication.isAuthenticated()) {
-            String jwtToken = jwtService.generateToken(loginRequest.getEmail());
-            return jwtToken;
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+        if (!authentication.isAuthenticated()) {
+            throw new JwtException(ErrorMessage.JWT_ERROR.getMessage());
         }
-        return null;
+        User user = userRepository.findByEmailIgnoreCase(loginRequest.getEmail()).orElseThrow(
+                () -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND.getMessage()));
+        String jwtToken = jwtService.generateToken(user.getId(), user.getEmail(), user.getRole());
+        Map<String, Object> map = new HashMap<>();
+        map.put("token", jwtToken);
+        map.put("role", user.getRole().name());
+        return map;
     }
 
-    public <T extends User> Map<String, Object> register(UserRegisterRequest registrationRequest, Class<T> targetClass) {
+    public <T extends User> Map<String, Object> register(UserRegisterRequest registrationRequest,
+            Class<T> targetClass) {
         T user = modelMapper.map(registrationRequest, targetClass);
-        Optional<User> userExisted = userRepository.findByEmailOrPhoneNumber(user.getEmail(), user.getPhoneNumber());
+        Optional<User> userExisted = userRepository.findByEmailIgnoreCaseOrPhoneNumber(user.getEmail(),
+                user.getPhoneNumber());
         if (userExisted.isPresent())
             throw new EntityExistsException(ErrorMessage.USER_EXIT.getMessage());
         user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
         T createdUser = userRepository.save(user);
-        String jwtToken = jwtService.generateToken(user.getEmail());
+        String jwtToken = jwtService.generateToken(createdUser.getId(), createdUser.getEmail(), createdUser.getRole());
         Map<String, Object> map = new HashMap<>();
         if (createdUser instanceof Patient)
             map.put("user", modelMapper.map(createdUser, UserMainView.class));
@@ -62,11 +72,10 @@ public class AuthService {
     }
 
     public Map<String, Object> forgetPassword(ForgetPasswordRequest forgetPasswordRequest) {
-        User foundedUser = userRepository.findByEmail(forgetPasswordRequest.getEmail()).orElseThrow(
-                () -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND.getMessage())
-        );
+        User foundedUser = userRepository.findByEmailIgnoreCase(forgetPasswordRequest.getEmail()).orElseThrow(
+                () -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND.getMessage()));
         foundedUser.setPassword(passwordEncoder.encode(forgetPasswordRequest.getNewPassword()));
-        User updatedUser = userRepository.save(foundedUser);
+        userRepository.save(foundedUser);
         Map<String, Object> map = new HashMap<>();
         map.put("message", "Password updated successfully");
         return map;

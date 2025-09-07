@@ -80,7 +80,7 @@ public class AppointmentService {
                     appointment.getDoctor().getId(),
                     appointment.getPatient().getId(),
                     request.getDate())
-                    .ifPresent(existingAppointment -> {
+                    .ifPresent(_ -> {
                         throw new EntityNotFoundException(ErrorMessage.APPOINTMENT_EXISTS.getMessage());
                     });
 

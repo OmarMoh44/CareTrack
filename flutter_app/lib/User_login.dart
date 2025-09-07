@@ -47,6 +47,7 @@ class _UserLoginState extends State<UserLogin> {
 
         // Extract token from response
         final String? token = responseData['token'];
+        final role = responseData['role'] as String;
 
         if (token != null) {
           // Save token to SharedPreferences
@@ -54,6 +55,10 @@ class _UserLoginState extends State<UserLogin> {
           await prefs.setString('auth_token', token);
 
           if (!mounted) return;
+          if (role != "PATIENT") {
+            _showError('Login failed', 'You are not registered as a patient.');
+            return;
+          }
           // Navigate to HomeUser (token will be retrieved from SharedPreferences)
           Navigator.pushReplacement(
             context,

@@ -42,12 +42,17 @@ class _DoctorLoginState extends State<DoctorLogin> {
       if (res.statusCode == 200) {
         final responseData = jsonDecode(res.body);
         final token = responseData['token'] as String;
+        final role = responseData['role'] as String;
 
         // Save the token and user role
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('auth_token', token);
 
         if (!mounted) return;
+        if (role != "DOCTOR") {
+          _showError('Login failed', 'You are not registered as a doctor.');
+          return;
+        }
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomeDr()),

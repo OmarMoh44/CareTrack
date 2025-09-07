@@ -4,12 +4,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import jakarta.persistence.EntityNotFoundException;
-import org.example.backend.exception.ErrorMessage;
 import org.example.backend.model.Role;
 import org.example.backend.model.User;
-import org.example.backend.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -30,18 +26,13 @@ public class JwtService {
     @Value("${jwt.expiration-ms}")
     private long jwtExpirationMs;
 
-    @Autowired
-    private UserRepository userRepository;
 
-    public String generateToken(String email) {
+    public String generateToken(Long id, String email, Role role) {
         Map<String, Object> claims = new HashMap<>();
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND.getMessage())
-        );
-        claims.put("id", user.getId());
+        claims.put("id", id);
         // claims accept only basic types (number, string) not (enum and complex structure)
         // so, we get string value from enum role value
-        claims.put("role", user.getRole().name());
+        claims.put("role", role.name());
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(email)
@@ -53,11 +44,11 @@ public class JwtService {
 
     // Extract all claims from token
     public Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        return Jwts.parserBuilder()                 // create a JWT parser
+                .setSigningKey(getSigningKey())     // set the secret key (to verify signature)
+                .build()                            // build the parser
+                .parseClaimsJws(token)              // parse the token (validate signature + structure)
+                .getBody();                         // extract the body (claims)
     }
 
     // Extract a specific claim (generic template method)

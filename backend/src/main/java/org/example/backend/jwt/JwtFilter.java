@@ -40,12 +40,13 @@ public class JwtFilter extends OncePerRequestFilter {
                 || path.startsWith("/webjars");
     }
 
+    // the filter’s purpose is to authenticate the request before it reaches your controllers.
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
 
         String token = null;
-        String email = null;
+        Long id = null;
 
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
@@ -64,14 +65,18 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         if (token != null) {
-            email = jwtService.extractEmail(token);
+            id = jwtService.extractId(token);
         }
-        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            User user = userRepository.findByEmail(email).orElseThrow(
+        // check if id is extracted and the user is not yet authenticated and set in the security context
+        if (id != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            User user = userRepository.findById(id).orElseThrow(
                     () -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND.getMessage())
             );
 
             if (jwtService.validateToken(token, user)) {
+                // create an authentication object using the user's details and set it in the security context
+                // as, controller methods can use @AuthenticationPrincipal to access the authenticated user in authentication object in the security context
+                // and @PreAuthorize can use it for authorization
                 UsernamePasswordAuthenticationToken authenticationToken =
                         // principal is an object of the authenticated user
                         new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());

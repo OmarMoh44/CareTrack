@@ -21,7 +21,7 @@ public class DataSeeder {
 
     @Bean
     public CommandLineRunner seedDatabase() {
-        return args -> {
+        return _ -> {
             if (userRepository.count() > 0) {
                 System.out.println("Database already seeded, skipping...");
                 return;

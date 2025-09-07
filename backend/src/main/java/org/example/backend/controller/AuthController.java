@@ -1,6 +1,5 @@
 package org.example.backend.controller;
 
-import io.jsonwebtoken.JwtException;
 import io.swagger.v3.oas.annotations.StringToClassMapItem;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -10,7 +9,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.*;
-import org.example.backend.exception.ErrorMessage;
 import org.example.backend.model.Doctor;
 import org.example.backend.model.Patient;
 import org.example.backend.model.User;
@@ -20,7 +18,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -39,19 +36,16 @@ public class AuthController {
                     example = """
                             {
                                 "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                                "role": "PATIENT"
                             }
                             """
             )
     ))
     @PostMapping("/login")
     public Map<String, Object> login(@RequestBody @Valid LoginRequest loginRequest, HttpServletResponse response) {
-        String jwtToken = authService.login(loginRequest);
-        if (jwtToken == null)
-            throw new JwtException(ErrorMessage.JWT_ERROR.getMessage());
-        addCookie(response, jwtToken);
-        Map<String, Object> body = new HashMap<>();
-        body.put("token", jwtToken);
-        return body;
+        Map<String, Object> resBody = authService.login(loginRequest);
+        addCookie(response, resBody.get("token").toString());
+        return resBody;
     }
 
     @ApiResponse(responseCode = "200", description = "Successfully logged in", content = @Content(
